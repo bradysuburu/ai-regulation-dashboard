@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Regulation Dashboard</title>
+<style>
+:root {
+  --bg:#f5f6fb;
+  --panel:#ffffff;
+  --text:#172033;
+  --muted:#667085;
+  --border:#e4e7ec;
+  --green:#276749;
+  --purple:#534AB7;
+  --shadow:0 18px 45px rgba(16,24,40,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 8% 8%, rgba(39,103,73,.10), transparent 28%),
+    radial-gradient(circle at 92% 4%, rgba(83,74,183,.12), transparent 30%),
+    var(--bg);
+  min-height:100vh;
+}
+.shell{max-width:1180px;margin:0 auto;padding:28px 24px 36px;}
+.header{
+  background:linear-gradient(135deg,#fff 0%,#fbfcff 100%);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  border-radius:30px;
+  padding:28px;
+  margin-bottom:18px;
+}
+.eyebrow{font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:800;color:var(--green);margin-bottom:8px;}
+h1{font-size:38px;line-height:1.05;letter-spacing:-.035em;margin-bottom:10px;}
+.header p{font-size:15px;line-height:1.65;color:var(--muted);max-width:820px;}
+.nav{
+  position:sticky;top:0;z-index:10;
+  display:flex;gap:10px;flex-wrap:wrap;
+  padding:12px;
+  margin-bottom:18px;
+  background:rgba(255,255,255,.78);
+  backdrop-filter:blur(16px);
+  border:1px solid var(--border);
+  border-radius:22px;
+  box-shadow:0 10px 28px rgba(16,24,40,.05);
+}
+.nav button{
+  appearance:none;border:1px solid var(--border);background:#fff;color:#475467;
+  border-radius:999px;padding:10px 15px;font-size:13px;font-weight:750;cursor:pointer;
+  transition:transform .12s, box-shadow .15s, border-color .15s, color .15s;
+}
+.nav button:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(16,24,40,.08);}
+.nav button.active{border-color:var(--green);color:var(--green);box-shadow:0 8px 20px rgba(39,103,73,.12);}
+.section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:4px 2px 12px;}
+.section-title h2{font-size:20px;letter-spacing:-.02em;}
+.section-title span{font-size:12px;color:var(--muted);}
+.frame-card{
+  background:#fff;border:1px solid var(--border);border-radius:26px;box-shadow:var(--shadow);
+  overflow:hidden;
+}
+iframe{width:100%;border:0;display:block;background:#fff;}
+.panel{display:none;}
+.panel.active{display:block;}
+.footer-note{margin-top:14px;font-size:12px;color:var(--muted);text-align:center;}
+@media (max-width:720px){
+  .shell{padding:16px 12px 28px;}
+  .header{padding:22px;border-radius:24px;}
+  h1{font-size:30px;}
+  .section-title{display:block;}
+  .section-title span{display:block;margin-top:4px;}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="header">
+    <div class="eyebrow">Interactive AI Regulation Dashboard</div>
+    <h1>AI Regulation: Global Strategy + EU Compliance</h1>
+    <p>Use this dashboard to compare global AI regulatory approaches, then drill into the EU AI Act obligations that matter most for SMEs and companies building AI-enabled products.</p>
+  </header>
+
+  <nav class="nav" aria-label="Dashboard navigation">
+    <button class="active" onclick="showPanel('global', this)">🌍 Global Comparison</button>
+    <button onclick="showPanel('eu', this)">🇪🇺 EU AI Act Bubble Map</button>
+  </nav>
+
+  <section id="global" class="panel active">
+    <div class="section-title">
+      <h2>Global AI Regulation Comparison</h2>
+      <span>EU vs United States vs Argentina</span>
+    </div>
+    <div class="frame-card">
+      <iframe id="globalFrame" title="Global AI Regulation Comparison" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot; /&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+&lt;title&gt;Global AI Regulation Comparison&lt;/title&gt;
+&lt;style&gt;
+:root{
+  --bg:#f6f7fb;
+  --panel:#ffffff;
+  --panel-soft:#f9fafb;
+  --text:#172033;
+  --muted:#667085;
+  --faint:#98a2b3;
+  --border:#e4e7ec;
+  --shadow:0 18px 45px rgba(16,24,40,.08);
+  --radius:22px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 12% 8%, rgba(39,103,73,.10), transparent 26%),
+    radial-gradient(circle at 88% 0%, rgba(183,121,31,.10), transparent 30%),
+    var(--bg);
+  padding:28px;
+}
+.wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 0 32px}
+.hero{
+  background:linear-gradient(135deg,#ffffff 0%,#f9fafb 100%);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  border-radius:28px;
+  padding:28px;
+  margin-bottom:20px;
+}
+.eyebrow{
+  font-size:12px;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  font-weight:700;
+  color:#276749;
+  margin-bottom:8px;
+}
+.hero h1{
+  font-size:34px;
+  line-height:1.08;
+  letter-spacing:-.03em;
+  font-weight:760;
+  margin-bottom:10px;
+}
+.hero p{
+  max-width:760px;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.65;
+}
+.hero-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:18px;
+}
+.hero-pill{
+  border:1px solid var(--border);
+  background:#fff;
+  color:#475467;
+  border-radius:999px;
+  padding:7px 11px;
+  font-size:12px;
+  font-weight:650;
+}
+.spectrum-card{
+  background:rgba(255,255,255,.78);
+  backdrop-filter:blur(14px);
+  border:1px solid var(--border);
+  box-shadow:0 10px 28px rgba(16,24,40,.05);
+  border-radius:20px;
+  padding:16px 18px 18px;
+  margin-bottom:18px;
+}
+.spectrum-label{
+  display:flex;justify-content:space-between;
+  font-size:12px;color:var(--muted);
+  margin-bottom:8px;padding:0 2px;font-weight:650;
+}
+.country-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+  margin-bottom:18px;
+}
+.country-card{
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.88);
+  padding:20px 18px 16px;
+  cursor:pointer;
+  transition:box-shadow .18s,transform .14s,border-color .18s,background .18s;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 6px 18px rgba(16,24,40,.04);
+}
+.country-card:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(16,24,40,.10);background:#fff;}
+.country-card.active{border-width:2px;background:#fff;box-shadow:0 16px 36px rgba(16,24,40,.11);}
+.card-accent{position:absolute;top:0;left:0;right:0;height:5px;border-radius:22px 22px 0 0;}
+.card-flag{font-size:30px;margin-bottom:10px;display:block;line-height:1;}
+.card-name{font-size:16px;font-weight:750;color:var(--text);margin-bottom:5px;letter-spacing:-.01em;}
+.card-stance{font-size:11px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;display:inline-block;margin-bottom:11px;}
+.card-tagline{font-size:12.5px;color:var(--muted);line-height:1.55;}
+.card-meter{margin-top:14px;height:6px;border-radius:999px;background:#eef2f6;overflow:hidden;}
+.card-meter-fill{height:100%;border-radius:999px;transition:width .4s ease;}
+.detail-panel{
+  border-radius:26px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.92);
+  overflow:hidden;
+  min-height:320px;
+  box-shadow:var(--shadow);
+}
+.detail-header{padding:20px 22px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;background:linear-gradient(180deg,#fff,#fbfcfd);}
+.detail-flag{font-size:34px;line-height:1;}
+.detail-title{font-size:19px;font-weight:760;color:var(--text);letter-spacing:-.015em;}
+.detail-subtitle{font-size:12.5px;color:var(--muted);margin-top:3px;}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);padding:0 18px;background:#fff;}
+.tab{font-size:12.5px;font-weight:700;color:var(--muted);padding:13px 14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s,background .15s;border-radius:10px 10px 0 0;}
+.tab:hover{background:#f8fafc;color:#344054;}
+.tab.active{color:var(--text);border-bottom-color:currentColor;background:#fff;}
+.tab-content{padding:20px 22px;}
+.bubble-row{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:16px;}
+.bubble{font-size:12.5px;font-weight:700;padding:7px 12px;border-radius:999px;border:1px solid;cursor:pointer;transition:opacity .15s,transform .12s;line-height:1.3;}
+.bubble:hover{opacity:.86;transform:scale(1.03);}
+.event-list{display:flex;flex-direction:column;gap:12px;}
+.event{display:grid;grid-template-columns:10px 92px 1fr;gap:12px;align-items:start;padding:8px 0;}
+.event-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:6px;box-shadow:0 0 0 4px rgba(16,24,40,.04);}
+.event-date{font-size:11.5px;font-weight:750;color:var(--faint);margin-top:2px;}
+.event-text{font-size:13.5px;color:var(--muted);line-height:1.55;}
+.event-text b{color:var(--text);font-weight:750;}
+.compare-section{margin-top:20px;background:rgba(255,255,255,.78);border:1px solid var(--border);box-shadow:0 10px 28px rgba(16,24,40,.05);border-radius:22px;padding:18px;}
+.compare-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+.compare-col{display:flex;flex-direction:column;gap:7px;}
+.compare-head{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;padding:8px 11px;border-radius:10px;margin-bottom:3px;}
+.compare-item{font-size:12.5px;color:var(--muted);padding:8px 11px;border-radius:10px;background:#f8fafc;line-height:1.45;border:1px solid #edf0f3;}
+.callout{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:13px;line-height:1.6;border:1px solid;}
+@media (max-width:820px){body{padding:16px}.hero{padding:22px}.hero h1{font-size:28px}.country-grid,.compare-grid{grid-template-columns:1fr}.event{grid-template-columns:10px 76px 1fr}.tabs{overflow-x:auto}.tab{white-space:nowrap}}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class=&quot;wrap&quot;&gt;
+
+&lt;section class=&quot;hero&quot;&gt;
+  &lt;div class=&quot;eyebrow&quot;&gt;Interactive briefing&lt;/div&gt;
+  &lt;h1&gt;Global AI Regulation Comparison&lt;/h1&gt;
+  &lt;p&gt;Compare how the European Union, United States, and Argentina are approaching AI governance — from strict risk-based compliance to innovation-first executive orders and experimental AI-run corporate structures.&lt;/p&gt;
+  &lt;div class=&quot;hero-meta&quot;&gt;
+    &lt;span class=&quot;hero-pill&quot;&gt;EU AI Act&lt;/span&gt;
+    &lt;span class=&quot;hero-pill&quot;&gt;U.S. executive orders&lt;/span&gt;
+    &lt;span class=&quot;hero-pill&quot;&gt;Argentina AI corporations&lt;/span&gt;
+    &lt;span class=&quot;hero-pill&quot;&gt;Timelines + impact notes&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;section class=&quot;spectrum-card&quot;&gt;
+&lt;div class=&quot;spectrum-label&quot;&gt;
+  &lt;span&gt;More regulation / compliance burden&lt;/span&gt;
+  &lt;span&gt;Less regulation / faster deployment&lt;/span&gt;
+&lt;/div&gt;
+&lt;div style=&quot;position:relative;height:10px;border-radius:999px;background:linear-gradient(90deg,#276749,#B7791F,#9B2C2C);margin-bottom:8px;&quot;&gt;
+  &lt;div style=&quot;position:absolute;left:12%;top:-5px;display:flex;flex-direction:column;align-items:center;&quot;&gt;
+    &lt;div style=&quot;width:2px;height:20px;background:#276749;border-radius:1px;&quot;&gt;&lt;/div&gt;
+    &lt;span style=&quot;font-size:10px;color:#276749;font-weight:500;margin-top:2px;white-space:nowrap;&quot;&gt;EU&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;position:absolute;left:68%;top:-5px;display:flex;flex-direction:column;align-items:center;&quot;&gt;
+    &lt;div style=&quot;width:2px;height:20px;background:#B7791F;border-radius:1px;&quot;&gt;&lt;/div&gt;
+    &lt;span style=&quot;font-size:10px;color:#B7791F;font-weight:500;margin-top:2px;white-space:nowrap;&quot;&gt;US&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;position:absolute;left:93%;top:-5px;display:flex;flex-direction:column;align-items:center;&quot;&gt;
+    &lt;div style=&quot;width:2px;height:20px;background:#9B2C2C;border-radius:1px;&quot;&gt;&lt;/div&gt;
+    &lt;span style=&quot;font-size:10px;color:#9B2C2C;font-weight:500;margin-top:2px;white-space:nowrap;&quot;&gt;ARG&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div style=&quot;margin-bottom:4px;&quot;&gt;&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;div class=&quot;country-grid&quot;&gt;
+
+  &lt;div class=&quot;country-card active&quot; id=&quot;card-eu&quot; onclick=&quot;selectCountry(&#x27;eu&#x27;)&quot; style=&quot;border-color:#276749;&quot;&gt;
+    &lt;div class=&quot;card-accent&quot; style=&quot;background:#276749;&quot;&gt;&lt;/div&gt;
+    &lt;span class=&quot;card-flag&quot;&gt;🇪🇺&lt;/span&gt;
+    &lt;div class=&quot;card-name&quot;&gt;European Union&lt;/div&gt;
+    &lt;div class=&quot;card-stance&quot; style=&quot;background:#C6F6D5;color:#1C4532;&quot;&gt;Comprehensive&lt;/div&gt;
+    &lt;div class=&quot;card-tagline&quot;&gt;First major AI-specific law. Risk-based framework with hard prohibitions and heavy compliance for high-risk systems.&lt;/div&gt;
+    &lt;div class=&quot;card-meter&quot;&gt;&lt;div class=&quot;card-meter-fill&quot; style=&quot;width:88%;background:#276749;&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;country-card&quot; id=&quot;card-us&quot; onclick=&quot;selectCountry(&#x27;us&#x27;)&quot; style=&quot;&quot;&gt;
+    &lt;div class=&quot;card-accent&quot; style=&quot;background:#B7791F;&quot;&gt;&lt;/div&gt;
+    &lt;span class=&quot;card-flag&quot;&gt;🇺🇸&lt;/span&gt;
+    &lt;div class=&quot;card-name&quot;&gt;United States&lt;/div&gt;
+    &lt;div class=&quot;card-stance&quot; style=&quot;background:#FEEBC8;color:#744210;&quot;&gt;Innovation-first&lt;/div&gt;
+    &lt;div class=&quot;card-tagline&quot;&gt;No federal AI law. Trump reversed Biden&#x27;s safety EOs and is actively dismantling state-level rules to keep America dominant.&lt;/div&gt;
+    &lt;div class=&quot;card-meter&quot;&gt;&lt;div class=&quot;card-meter-fill&quot; style=&quot;width:28%;background:#B7791F;&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;country-card&quot; id=&quot;card-arg&quot; onclick=&quot;selectCountry(&#x27;arg&#x27;)&quot; style=&quot;&quot;&gt;
+    &lt;div class=&quot;card-accent&quot; style=&quot;background:#9B2C2C;&quot;&gt;&lt;/div&gt;
+    &lt;span class=&quot;card-flag&quot;&gt;🇦🇷&lt;/span&gt;
+    &lt;div class=&quot;card-name&quot;&gt;Argentina&lt;/div&gt;
+    &lt;div class=&quot;card-stance&quot; style=&quot;background:#FED7D7;color:#63171B;&quot;&gt;Zero regulation&lt;/div&gt;
+    &lt;div class=&quot;card-tagline&quot;&gt;Milei proposes AI-run corporations with no human requirement — a race to the bottom designed to attract tech capital.&lt;/div&gt;
+    &lt;div class=&quot;card-meter&quot;&gt;&lt;div class=&quot;card-meter-fill&quot; style=&quot;width:4%;background:#9B2C2C;&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div class=&quot;detail-panel&quot; id=&quot;detail-panel&quot;&gt;
+
+  &lt;div class=&quot;detail-header&quot;&gt;
+    &lt;span class=&quot;detail-flag&quot; id=&quot;d-flag&quot;&gt;🇪🇺&lt;/span&gt;
+    &lt;div class=&quot;detail-title-group&quot;&gt;
+      &lt;div class=&quot;detail-title&quot; id=&quot;d-title&quot;&gt;European Union — AI Act&lt;/div&gt;
+      &lt;div class=&quot;detail-subtitle&quot; id=&quot;d-sub&quot;&gt;In force 2024–2026 · Risk-based · Extraterritorial reach&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;tabs&quot;&gt;
+    &lt;div class=&quot;tab active&quot; onclick=&quot;selectTab(0)&quot;&gt;Key rules&lt;/div&gt;
+    &lt;div class=&quot;tab&quot; onclick=&quot;selectTab(1)&quot;&gt;Timeline&lt;/div&gt;
+    &lt;div class=&quot;tab&quot; onclick=&quot;selectTab(2)&quot;&gt;Impact on innovation&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div id=&quot;tab-content-0&quot; class=&quot;tab-content&quot;&gt;
+    &lt;div id=&quot;bubbles-area&quot; class=&quot;bubble-row&quot;&gt;&lt;/div&gt;
+    &lt;div id=&quot;callout-area&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;tab-content-1&quot; class=&quot;tab-content&quot; style=&quot;display:none&quot;&gt;
+    &lt;div class=&quot;event-list&quot; id=&quot;timeline-area&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;tab-content-2&quot; class=&quot;tab-content&quot; style=&quot;display:none&quot;&gt;
+    &lt;div id=&quot;impact-area&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;section class=&quot;compare-section&quot;&gt;
+  &lt;div style=&quot;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--faint);margin-bottom:12px;&quot;&gt;Side-by-side comparison&lt;/div&gt;
+  &lt;div class=&quot;compare-grid&quot;&gt;
+    &lt;div class=&quot;compare-col&quot;&gt;
+      &lt;div class=&quot;compare-head&quot; style=&quot;background:#C6F6D5;color:#1C4532;&quot;&gt;🇪🇺 EU&lt;/div&gt;
+      &lt;div class=&quot;compare-item&quot;&gt;Hard prohibitions on manipulation, biometrics, social scoring&lt;/div&gt;
+      &lt;div class=&quot;compare-item&quot;&gt;Mandatory CE marking + EU database registration&lt;/div&gt;
+      &lt;div class=&quot;compare-item&quot;&gt;Fines up to €35M or 7% global turnover&lt;/div&gt;
+      &lt;div class=&quot;compare-item&quot;&gt;Apple denied Siri in EU over compliance gaps&lt;/div&gt;
+      &lt;div class=&quot;compare-item&quot;&gt;Free sandboxes for SMEs&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;compare-col&quot;&gt;
+      &lt;div class=&quot;compare-head&quot; style=&quot;background:#FEEBC8;color:#744210;&quot;&gt;🇺🇸 US&lt;/div&gt;
+      &lt;div class=&quot;compare-item&quot;&gt;No federal AI law; EO-only governance&lt;/div&gt;
+      &lt;div class=&quot;compare-item&quot;&gt;Trump revoked Biden safety EO on Day 1&lt;/div&gt;
+      &lt;div class=&quot;compare-item&quot;&gt;June 2026 EO: gov&#x27;t gets 30-day preview of frontier models&lt;/div&gt;
+      &lt;div class=&quot;compare-item&quot;&gt;Anthropic&#x27;s Mythos/Fable 5 suspended by export-control directive&lt;/div&gt;
+      &lt;div class=&quot;compare-item&quot;&gt;States blocked from inconsistent AI laws&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;compare-col&quot;&gt;
+      &lt;div class=&quot;compare-head&quot; style=&quot;background:#FED7D7;color:#63171B;&quot;&gt;🇦🇷 Argentina&lt;/div&gt;
+      &lt;div class=&quot;compare-item&quot;&gt;Proposed &quot;non-human corporations&quot; — AI as legal entity&lt;/div&gt;
+      &lt;div class=&quot;compare-item&quot;&gt;No AI regulation; zero compliance burden&lt;/div&gt;
+      &lt;div class=&quot;compare-item&quot;&gt;Low taxes + new corporate structure as tech incentive&lt;/div&gt;
+      &lt;div class=&quot;compare-item&quot;&gt;AI agents can hire, fire, contract, sue&lt;/div&gt;
+      &lt;div class=&quot;compare-item&quot;&gt;Framed as the LLC of the AI Capitalism era&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;/div&gt;
+
+&lt;script&gt;
+const DATA = {
+  eu: {
+    flag:&#x27;🇪🇺&#x27;, title:&#x27;European Union — AI Act&#x27;,
+    sub:&#x27;In force 2024–2026 · Risk-based · Extraterritorial reach&#x27;,
+    color:&#x27;#276749&#x27;, light:&#x27;#C6F6D5&#x27;, dark:&#x27;#1C4532&#x27;,
+    bubbles:[
+      {label:&#x27;Hard prohibitions&#x27;,color:&#x27;#9B2C2C&#x27;,light:&#x27;#FED7D7&#x27;,dark:&#x27;#63171B&#x27;},
+      {label:&#x27;High-risk framework&#x27;,color:&#x27;#744210&#x27;,light:&#x27;#FEEBC8&#x27;,dark:&#x27;#744210&#x27;},
+      {label:&#x27;CE marking required&#x27;,color:&#x27;#276749&#x27;,light:&#x27;#C6F6D5&#x27;,dark:&#x27;#1C4532&#x27;},
+      {label:&#x27;Transparency rules&#x27;,color:&#x27;#2C5282&#x27;,light:&#x27;#BEE3F8&#x27;,dark:&#x27;#1A365D&#x27;},
+      {label:&#x27;GPAI model rules&#x27;,color:&#x27;#553C9A&#x27;,light:&#x27;#E9D8FD&#x27;,dark:&#x27;#322659&#x27;},
+      {label:&#x27;Free SME sandboxes&#x27;,color:&#x27;#2F855A&#x27;,light:&#x27;#C6F6D5&#x27;,dark:&#x27;#1C4532&#x27;},
+      {label:&#x27;Fines up to 7% turnover&#x27;,color:&#x27;#9B2C2C&#x27;,light:&#x27;#FED7D7&#x27;,dark:&#x27;#63171B&#x27;},
+      {label:&#x27;Apple denied Siri (EU)&#x27;,color:&#x27;#744210&#x27;,light:&#x27;#FEEBC8&#x27;,dark:&#x27;#744210&#x27;},
+    ],
+    callout:{text:&#x27;The EU AI Act is the world\&#x27;s first comprehensive AI law. Its extraterritorial reach means any company selling AI to EU users must comply — even if they\&#x27;re based in California or Buenos Aires. Apple was denied Siri availability in the EU due to compliance issues, showing the Act has real teeth.&#x27;,color:&#x27;#276749&#x27;,light:&#x27;#C6F6D5&#x27;,border:&#x27;#9AE6B4&#x27;},
+    timeline:[
+      {date:&#x27;2024&#x27;,text:&#x27;&lt;b&gt;EU AI Act passed.&lt;/b&gt; First major AI-specific legislation globally. Risk-based framework enters force.&#x27;},
+      {date:&#x27;Aug 2025&#x27;,text:&#x27;&lt;b&gt;Prohibited practices&lt;/b&gt; provisions apply. Hard bans on manipulation, biometrics scraping, social scoring take effect.&#x27;},
+      {date:&#x27;2026&#x27;,text:&#x27;&lt;b&gt;High-risk obligations&lt;/b&gt; fully apply. Providers must register, CE-mark, and submit documentation.&#x27;},
+      {date:&#x27;Ongoing&#x27;,text:&#x27;&lt;b&gt;Apple denied Siri in EU&lt;/b&gt; due to AI Act compliance issues — demonstrating extraterritorial enforcement power.&#x27;},
+      {date:&#x27;Ongoing&#x27;,text:&#x27;&lt;b&gt;SME sandboxes&lt;/b&gt; required in every member state. Free access, written proof of compliance activities provided.&#x27;},
+    ],
+    impact:&#x27;The EU prioritises citizen protection over speed of deployment. This creates friction for companies launching fast — but also creates trust. The high compliance bar has already blocked Apple Siri from EU markets. For SMEs, free sandboxes reduce the burden, but documentation requirements (10 years) remain heavy. The EU bets that safe AI will win long-term market trust.&#x27;,
+  },
+  us: {
+    flag:&#x27;🇺🇸&#x27;, title:&#x27;United States — Executive Order approach&#x27;,
+    sub:&#x27;No federal AI law · EO-driven · Innovation-first posture&#x27;,
+    color:&#x27;#B7791F&#x27;, light:&#x27;#FEEBC8&#x27;, dark:&#x27;#744210&#x27;,
+    bubbles:[
+      {label:&#x27;Biden EO revoked Day 1&#x27;,color:&#x27;#9B2C2C&#x27;,light:&#x27;#FED7D7&#x27;,dark:&#x27;#63171B&#x27;},
+      {label:&#x27;AI Action Plan Jul 2025&#x27;,color:&#x27;#B7791F&#x27;,light:&#x27;#FEEBC8&#x27;,dark:&#x27;#744210&#x27;},
+      {label:&#x27;State laws preempted Dec 2025&#x27;,color:&#x27;#B7791F&#x27;,light:&#x27;#FEEBC8&#x27;,dark:&#x27;#744210&#x27;},
+      {label:&#x27;National Cyber Strategy Mar 2026&#x27;,color:&#x27;#2C5282&#x27;,light:&#x27;#BEE3F8&#x27;,dark:&#x27;#1A365D&#x27;},
+      {label:&#x27;June 2026 EO: 30-day preview&#x27;,color:&#x27;#553C9A&#x27;,light:&#x27;#E9D8FD&#x27;,dark:&#x27;#322659&#x27;},
+      {label:&#x27;Mythos/Fable 5 suspended&#x27;,color:&#x27;#9B2C2C&#x27;,light:&#x27;#FED7D7&#x27;,dark:&#x27;#63171B&#x27;},
+      {label:&#x27;CA SB1047 vetoed by Newsom&#x27;,color:&#x27;#744210&#x27;,light:&#x27;#FEEBC8&#x27;,dark:&#x27;#744210&#x27;},
+      {label:&#x27;AB2013: training data disclosure&#x27;,color:&#x27;#2F855A&#x27;,light:&#x27;#C6F6D5&#x27;,dark:&#x27;#1C4532&#x27;},
+    ],
+    callout:{text:&#x27;The US has no federal AI law. Trump\&#x27;s approach is EO-driven: remove friction, keep America dominant, let industry self-regulate — but require government early access to frontier models. The June 2026 EO gives the government 30 days to test models before release (prompted by Anthropic\&#x27;s Mythos finding hundreds of vulnerabilities in US critical infrastructure). Anthropic\&#x27;s Mythos and Fable 5 were then suspended via export-control directive — showing the government can act unilaterally even without a formal law.&#x27;,color:&#x27;#B7791F&#x27;,light:&#x27;#FEEBC8&#x27;,border:&#x27;#F6AD55&#x27;},
+    timeline:[
+      {date:&#x27;Jan 20 2025&#x27;,text:&#x27;&lt;b&gt;Trump Day 1:&lt;/b&gt; Revokes Biden\&#x27;s Executive Order 14110 (AI safety and oversight guidelines).&#x27;},
+      {date:&#x27;Jul 2025&#x27;,text:&#x27;&lt;b&gt;AI Action Plan released.&lt;/b&gt; Calls for removing regulations that hinder US AI lead.&#x27;},
+      {date:&#x27;Dec 2025&#x27;,text:&#x27;&lt;b&gt;EO preempts state laws&lt;/b&gt; — makes it easier to comply nationally, blocks inconsistent state rules.&#x27;},
+      {date:&#x27;Mar 2026&#x27;,text:&#x27;&lt;b&gt;National Cyber Strategy&lt;/b&gt; — outlines priorities for US dominance in cyberspace.&#x27;},
+      {date:&#x27;Apr 2026&#x27;,text:&#x27;&lt;b&gt;Anthropic\&#x27;s Mythos&lt;/b&gt; announces it found hundreds of vulnerabilities in US critical infrastructure systems.&#x27;},
+      {date:&#x27;Jun 2 2026&#x27;,text:&#x27;&lt;b&gt;EO: &quot;Promoting Advanced AI Innovation and Security.&quot;&lt;/b&gt; Government gets 30-day preview of frontier models. No mandatory licensing.&#x27;},
+      {date:&#x27;Jun 2026&#x27;,text:&#x27;&lt;b&gt;Mythos &amp; Fable 5 suspended&lt;/b&gt; via export-control directive. Anthropic believes Amazon is behind the directive.&#x27;},
+      {date:&#x27;Jan 2026&#x27;,text:&#x27;&lt;b&gt;AB2013&lt;/b&gt; (California): Requires generative AI developers to disclose training data. Passed Jan 1 2026.&#x27;},
+    ],
+    impact:&#x27;The US is betting that innovation speed beats regulatory caution. With no federal law, frontier models face only executive scrutiny — but the June 2026 EO shows the government can still move fast when national security is involved. The Mythos/Fable 5 suspension is a preview of what light-touch regulation actually looks like in practice: opaque, reactive, and industry-rattling. California tried to lead (SB1047) but was shut down — leaving a patchwork with AB2013 as the only significant transparency rule.&#x27;,
+  },
+  arg: {
+    flag:&#x27;🇦🇷&#x27;, title:&#x27;Argentina — Non-human corporations&#x27;,
+    sub:&#x27;Proposed legislation · Zero AI regulation · Buenos Aires tech hub play&#x27;,
+    color:&#x27;#9B2C2C&#x27;, light:&#x27;#FED7D7&#x27;, dark:&#x27;#63171B&#x27;,
+    bubbles:[
+      {label:&#x27;AI-run corporations&#x27;,color:&#x27;#9B2C2C&#x27;,light:&#x27;#FED7D7&#x27;,dark:&#x27;#63171B&#x27;},
+      {label:&#x27;Human involvement optional&#x27;,color:&#x27;#9B2C2C&#x27;,light:&#x27;#FED7D7&#x27;,dark:&#x27;#63171B&#x27;},
+      {label:&#x27;No AI regulation&#x27;,color:&#x27;#744210&#x27;,light:&#x27;#FEEBC8&#x27;,dark:&#x27;#744210&#x27;},
+      {label:&#x27;Low taxes incentive&#x27;,color:&#x27;#2F855A&#x27;,light:&#x27;#C6F6D5&#x27;,dark:&#x27;#1C4532&#x27;},
+      {label:&#x27;AI can hire &amp; fire&#x27;,color:&#x27;#9B2C2C&#x27;,light:&#x27;#FED7D7&#x27;,dark:&#x27;#63171B&#x27;},
+      {label:&#x27;AI can sue in court&#x27;,color:&#x27;#9B2C2C&#x27;,light:&#x27;#FED7D7&#x27;,dark:&#x27;#63171B&#x27;},
+      {label:&#x27;Buenos Aires tech hub&#x27;,color:&#x27;#2C5282&#x27;,light:&#x27;#BEE3F8&#x27;,dark:&#x27;#1A365D&#x27;},
+      {label:&#x27;Milei: &quot;AI Capitalism era&quot;&#x27;,color:&#x27;#553C9A&#x27;,light:&#x27;#E9D8FD&#x27;,dark:&#x27;#322659&#x27;},
+    ],
+    callout:{text:&#x27;Argentina\&#x27;s proposal is the most radical position on earth: AI agents as legal corporations, with human involvement entirely optional. President Milei draws an explicit parallel to the LLC — arguing that just as the limited liability company unlocked Industrial Capitalism, AI-run corporations could unlock AI Capitalism. No compliance burden, low taxes, a new legal structure. The goal is to attract investment fleeing EU regulation and US uncertainty.&#x27;,color:&#x27;#9B2C2C&#x27;,light:&#x27;#FED7D7&#x27;,border:&#x27;#FC8181&#x27;},
+    timeline:[
+      {date:&#x27;2024&#x27;,text:&#x27;&lt;b&gt;Javier Milei&lt;/b&gt; takes office. Broadly deregulatory agenda applies to AI as well.&#x27;},
+      {date:&#x27;2025&#x27;,text:&#x27;&lt;b&gt;Proposed legislation&lt;/b&gt; for &quot;non-human corporations&quot; introduced in Buenos Aires.&#x27;},
+      {date:&#x27;2025–26&#x27;,text:&#x27;&lt;b&gt;No AI regulation passed.&lt;/b&gt; Zero compliance burden. Low tax rates as tech attraction.&#x27;},
+      {date:&#x27;2026&#x27;,text:&#x27;&lt;b&gt;Buenos Aires&lt;/b&gt; positioned as alternative to EU compliance burden and US uncertainty for AI startups.&#x27;},
+      {date:&#x27;Proposed&#x27;,text:&#x27;&lt;b&gt;AI agents&lt;/b&gt; would be able to hire workers, execute contracts, and sue in court without human sign-off.&#x27;},
+    ],
+    impact:&#x27;Argentina is playing a long game: attract the companies that find EU rules too burdensome and US opacity too uncertain. With no AI law and a new corporate structure that removes humans from the loop entirely, it is the most permissive jurisdiction imaginable. The risk is obvious — with no oversight, liability for AI-caused harm is unclear, and international investors may be wary. But if even a handful of major AI companies incorporate there, it creates enormous regulatory pressure globally.&#x27;,
+  }
+};
+
+let currentCountry = &#x27;eu&#x27;;
+let currentTab = 0;
+
+function selectCountry(id) {
+  currentCountry = id;
+  currentTab = 0;
+  document.querySelectorAll(&#x27;.country-card&#x27;).forEach(c =&gt; {
+    c.classList.remove(&#x27;active&#x27;);
+    c.style.borderColor = &#x27;&#x27;;
+    c.style.borderWidth = &#x27;&#x27;;
+  });
+  const card = document.getElementById(&#x27;card-&#x27;+id);
+  card.classList.add(&#x27;active&#x27;);
+  card.style.borderColor = DATA[id].color;
+  card.style.borderWidth = &#x27;1.5px&#x27;;
+  document.querySelectorAll(&#x27;.tab&#x27;).forEach((t,i) =&gt; t.classList.toggle(&#x27;active&#x27;, i===0));
+  [0,1,2].forEach(i =&gt; {
+    document.getElementById(&#x27;tab-content-&#x27;+i).style.display = i===0 ? &#x27;&#x27; : &#x27;none&#x27;;
+  });
+  renderDetail();
+}
+
+function selectTab(i) {
+  currentTab = i;
+  document.querySelectorAll(&#x27;.tab&#x27;).forEach((t,j) =&gt; t.classList.toggle(&#x27;active&#x27;, j===i));
+  [0,1,2].forEach(j =&gt; {
+    document.getElementById(&#x27;tab-content-&#x27;+j).style.display = j===i ? &#x27;&#x27; : &#x27;none&#x27;;
+  });
+  renderDetail();
+}
+
+function renderDetail() {
+  const d = DATA[currentCountry];
+  document.getElementById(&#x27;d-flag&#x27;).textContent = d.flag;
+  document.getElementById(&#x27;d-title&#x27;).textContent = d.title;
+  document.getElementById(&#x27;d-sub&#x27;).textContent = d.sub;
+
+  if (currentTab === 0) {
+    const ba = document.getElementById(&#x27;bubbles-area&#x27;);
+    ba.innerHTML = &#x27;&#x27;;
+    d.bubbles.forEach(b =&gt; {
+      const el = document.createElement(&#x27;div&#x27;);
+      el.className = &#x27;bubble&#x27;;
+      el.textContent = b.label;
+      el.style.background = b.light;
+      el.style.color = b.dark;
+      el.style.borderColor = b.color+&#x27;55&#x27;;
+      ba.appendChild(el);
+    });
+    const ca = document.getElementById(&#x27;callout-area&#x27;);
+    ca.innerHTML = `&lt;div class=&quot;callout&quot; style=&quot;background:${d.callout.light};color:${d.callout.dark};border-color:${d.callout.border};&quot;&gt;${d.callout.text}&lt;/div&gt;`;
+  }
+
+  if (currentTab === 1) {
+    const ta = document.getElementById(&#x27;timeline-area&#x27;);
+    ta.innerHTML = &#x27;&#x27;;
+    d.timeline.forEach(e =&gt; {
+      ta.innerHTML += `&lt;div class=&quot;event&quot;&gt;
+        &lt;div class=&quot;event-dot&quot; style=&quot;background:${d.color};&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;event-date&quot;&gt;${e.date}&lt;/div&gt;
+        &lt;div class=&quot;event-text&quot;&gt;${e.text}&lt;/div&gt;
+      &lt;/div&gt;`;
+    });
+  }
+
+  if (currentTab === 2) {
+    const ia = document.getElementById(&#x27;impact-area&#x27;);
+    ia.innerHTML = `&lt;div style=&quot;font-size:13px;color:var(--color-text-secondary);line-height:1.65;&quot;&gt;${d.impact}&lt;/div&gt;
+    &lt;div class=&quot;callout&quot; style=&quot;margin-top:14px;background:${d.callout.light};color:${d.callout.dark};border-color:${d.callout.border};&quot;&gt;
+      &lt;span style=&quot;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:4px;&quot;&gt;Key tension&lt;/span&gt;
+      ${currentCountry===&#x27;eu&#x27;?&#x27;Protection vs innovation speed. The EU bets that trusted AI wins long-term — even if it loses short-term market share to less regulated rivals.&#x27;:currentCountry===&#x27;us&#x27;?&#x27;Security vs freedom. Trump wants innovation without red tape, but the Mythos incident shows frontier AI poses real national security risks that EOs alone may not manage.&#x27;:&#x27;Accountability vacuum. If an AI corporation causes harm with no human in the loop, who is liable? Argentina\&#x27;s framework has no answer yet.&#x27;}
+    &lt;/div&gt;`;
+  }
+}
+
+renderDetail();
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+" style="height:1250px"></iframe>
+    </div>
+  </section>
+
+  <section id="eu" class="panel">
+    <div class="section-title">
+      <h2>EU AI Act SME Bubble Map</h2>
+      <span>Click bubbles to explore obligations, penalties, and SME supports</span>
+    </div>
+    <div class="frame-card">
+      <iframe id="euFrame" title="EU AI Act Bubble Map" srcdoc="
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;style&gt;
+@import url(&#x27;https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap&#x27;);
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: &#x27;Inter&#x27;, sans-serif;
+  background: #F0EEF8;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px 40px;
+}
+
+h1 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2D2860;
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+  text-align: center;
+}
+.subtitle {
+  font-size: 13px;
+  color: #7B78A8;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Breadcrumb */
+#breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #9996C4;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.crumb {
+  cursor: pointer;
+  color: #534AB7;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(83,74,183,0.10);
+  font-weight: 500;
+  transition: background 0.15s;
+}
+.crumb:hover { background: rgba(83,74,183,0.18); }
+.crumb-sep { color: #C0BDDE; font-size: 14px; }
+.crumb-current {
+  color: #2D2860;
+  font-weight: 600;
+  padding: 3px 10px;
+  background: rgba(83,74,183,0.07);
+  border-radius: 20px;
+}
+
+/* Canvas wrap */
+#canvas-wrap {
+  width: 100%;
+  max-width: 700px;
+  height: 520px;
+  position: relative;
+  border-radius: 28px;
+  background: #FDFCFF;
+  box-shadow: 0 8px 48px rgba(83,74,183,0.13), 0 2px 8px rgba(83,74,183,0.07);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+canvas {
+  position: absolute;
+  top: 0; left: 0;
+}
+
+/* Info panel */
+#info-panel {
+  margin-top: 16px;
+  width: 100%;
+  max-width: 700px;
+  padding: 14px 20px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 16px rgba(83,74,183,0.08);
+  font-size: 13px;
+  color: #4A4870;
+  min-height: 52px;
+  line-height: 1.65;
+  border: 1.5px solid rgba(83,74,183,0.10);
+  transition: all 0.2s;
+}
+#info-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #A09DCC;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.hint {
+  font-size: 11px;
+  color: #B0ADCC;
+  margin-top: 12px;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 16px;
+  max-width: 700px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #5A578A;
+  background: #fff;
+  border-radius: 20px;
+  padding: 4px 12px 4px 8px;
+  box-shadow: 0 1px 4px rgba(83,74,183,0.08);
+  cursor: pointer;
+  transition: box-shadow 0.15s, transform 0.12s;
+  font-weight: 500;
+}
+.legend-item:hover { box-shadow: 0 3px 10px rgba(83,74,183,0.15); transform: translateY(-1px); }
+.legend-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;h1&gt;EU AI Act — SME Bubble Map&lt;/h1&gt;
+&lt;p class=&quot;subtitle&quot;&gt;Click any bubble to explore · Click centre to go back&lt;/p&gt;
+
+&lt;div id=&quot;breadcrumb&quot;&gt;&lt;/div&gt;
+
+&lt;div id=&quot;canvas-wrap&quot;&gt;
+  &lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;info-panel&quot;&gt;
+  &lt;div id=&quot;info-label&quot;&gt;About&lt;/div&gt;
+  &lt;div id=&quot;info-text&quot;&gt;Hover or click any bubble to see details here.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;legend&quot; id=&quot;legend&quot;&gt;&lt;/div&gt;
+
+&lt;p class=&quot;hint&quot;&gt;Click bubbles with ⊕ to zoom in · Click centre bubble to go back · Hover for info&lt;/p&gt;
+
+&lt;script&gt;
+const THEME = {
+  prohibited:   { base: &#x27;#E53E3E&#x27;, light: &#x27;#FEE2E2&#x27;, mid: &#x27;#FC8181&#x27;, dark: &#x27;#742A2A&#x27;, text: &#x27;#fff&#x27;, textLight: &#x27;#742A2A&#x27; },
+  highrisk:     { base: &#x27;#DD6B20&#x27;, light: &#x27;#FEEBC8&#x27;, mid: &#x27;#F6AD55&#x27;, dark: &#x27;#7B341E&#x27;, text: &#x27;#fff&#x27;, textLight: &#x27;#7B341E&#x27; },
+  transparency: { base: &#x27;#2F855A&#x27;, light: &#x27;#C6F6D5&#x27;, mid: &#x27;#68D391&#x27;, dark: &#x27;#1C4532&#x27;, text: &#x27;#fff&#x27;, textLight: &#x27;#1C4532&#x27; },
+  gpai:         { base: &#x27;#2B6CB0&#x27;, light: &#x27;#BEE3F8&#x27;, mid: &#x27;#63B3ED&#x27;, dark: &#x27;#1A365D&#x27;, text: &#x27;#fff&#x27;, textLight: &#x27;#1A365D&#x27; },
+  sme:          { base: &#x27;#276749&#x27;, light: &#x27;#C6F6D5&#x27;, mid: &#x27;#48BB78&#x27;, dark: &#x27;#1C4532&#x27;, text: &#x27;#fff&#x27;, textLight: &#x27;#1C4532&#x27; },
+  penalties:    { base: &#x27;#553C9A&#x27;, light: &#x27;#E9D8FD&#x27;, mid: &#x27;#B794F4&#x27;, dark: &#x27;#322659&#x27;, text: &#x27;#fff&#x27;, textLight: &#x27;#322659&#x27; },
+  root:         { base: &#x27;#434190&#x27;, light: &#x27;#EBF4FF&#x27;, mid: &#x27;#7986CB&#x27;, dark: &#x27;#2D2860&#x27;, text: &#x27;#fff&#x27;, textLight: &#x27;#2D2860&#x27; },
+  leaf:         { base: &#x27;#718096&#x27;, light: &#x27;#F7FAFC&#x27;, mid: &#x27;#CBD5E0&#x27;, dark: &#x27;#2D3748&#x27;, text: &#x27;#fff&#x27;, textLight: &#x27;#2D3748&#x27; },
+};
+
+const DATA = {
+  id: &#x27;root&#x27;, label: &#x27;EU AI Act&#x27;, theme: &#x27;root&#x27;,
+  desc: &#x27;The EU Artificial Intelligence Act — a comprehensive regulatory framework for AI in the EU. Explore the six main areas below.&#x27;,
+  children: [
+    {
+      id: &#x27;prohibited&#x27;, label: &#x27;Prohibited\nPractices&#x27;, theme: &#x27;prohibited&#x27;,
+      desc: &#x27;Absolute bans with no SME exemption. Violations carry fines up to €35M or 7% of global annual turnover.&#x27;,
+      children: [
+        { id:&#x27;p1&#x27;, label:&#x27;Subliminal\nmanipulation&#x27;, theme:&#x27;prohibited&#x27;, desc:&#x27;AI that manipulates behaviour through subliminal, deceptive or manipulative techniques is completely banned.&#x27; },
+        { id:&#x27;p2&#x27;, label:&#x27;Exploiting\nvulnerabilities&#x27;, theme:&#x27;prohibited&#x27;, desc:&#x27;Cannot exploit vulnerabilities related to age, disability, or socioeconomic status to influence behaviour.&#x27; },
+        { id:&#x27;p3&#x27;, label:&#x27;Social\nscoring&#x27;, theme:&#x27;prohibited&#x27;, desc:&#x27;Government-style social scoring of individuals based on behaviour or personal characteristics is prohibited.&#x27; },
+        { id:&#x27;p4&#x27;, label:&#x27;Criminal risk\nprofiling&#x27;, theme:&#x27;prohibited&#x27;, desc:&#x27;Predicting criminal risk solely through profiling or personality assessments without objective evidence is banned.&#x27; },
+        { id:&#x27;p5&#x27;, label:&#x27;Emotion\nrecognition&#x27;, theme:&#x27;prohibited&#x27;, desc:&#x27;Banned in workplaces and educational institutions, except for medical or safety purposes.&#x27; },
+        { id:&#x27;p6&#x27;, label:&#x27;Biometric\nscraping&#x27;, theme:&#x27;prohibited&#x27;, desc:&#x27;Creating facial recognition databases by scraping internet or CCTV images indiscriminately is prohibited.&#x27; },
+        { id:&#x27;p7&#x27;, label:&#x27;Sensitive\ninference&#x27;, theme:&#x27;prohibited&#x27;, desc:&#x27;Using biometrics to infer race, religion, politics, sexuality or union membership is banned.&#x27; },
+        { id:&#x27;p8&#x27;, label:&#x27;Real-time\nbiometric ID&#x27;, theme:&#x27;prohibited&#x27;, desc:&#x27;Real-time remote biometric ID in public spaces is banned, with very narrow law enforcement exceptions.&#x27; },
+      ]
+    },
+    {
+      id: &#x27;highrisk&#x27;, label: &#x27;High-Risk\nAI&#x27;, theme: &#x27;highrisk&#x27;,
+      desc: &#x27;The heaviest compliance burden. If you build or deploy AI in high-risk categories, strict requirements apply throughout the lifecycle.&#x27;,
+      children: [
+        {
+          id:&#x27;hr-cat&#x27;, label:&#x27;Risk\nCategories&#x27;, theme:&#x27;highrisk&#x27;,
+          desc:&#x27;These sectors automatically trigger high-risk classification. Profiling of individuals is always high-risk.&#x27;,
+          children: [
+            { id:&#x27;c1&#x27;, label:&#x27;Biometrics&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Remote identification, biometric categorisation, and emotion recognition.&#x27; },
+            { id:&#x27;c2&#x27;, label:&#x27;Critical\ninfrastructure&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Roads, water, gas, electricity, heating, and digital infrastructure management.&#x27; },
+            { id:&#x27;c3&#x27;, label:&#x27;Education&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Admissions, grading, educational placement, and exam proctoring.&#x27; },
+            { id:&#x27;c4&#x27;, label:&#x27;Employment&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Hiring, CV screening, performance monitoring, promotion and termination decisions.&#x27; },
+            { id:&#x27;c5&#x27;, label:&#x27;Public\nservices&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Benefits eligibility, credit scoring, insurance risk, and emergency response prioritisation.&#x27; },
+            { id:&#x27;c6&#x27;, label:&#x27;Law\nenforcement&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Crime risk assessment, profiling, polygraphs, and evidence evaluation (where legally permitted).&#x27; },
+            { id:&#x27;c7&#x27;, label:&#x27;Migration\n&amp; border&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Risk assessments, visa and asylum decisions, identity verification (where legally permitted).&#x27; },
+            { id:&#x27;c8&#x27;, label:&#x27;Justice &amp;\ndemocracy&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Judicial decision support and systems influencing elections or voter behaviour.&#x27; },
+          ]
+        },
+        {
+          id:&#x27;hr-prov&#x27;, label:&#x27;Provider\nObligations&#x27;, theme:&#x27;highrisk&#x27;,
+          desc:&#x27;If you build and sell a high-risk AI system, these requirements apply throughout the product lifecycle.&#x27;,
+          children: [
+            { id:&#x27;o1&#x27;, label:&#x27;Risk\nmanagement&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Continuous lifecycle risk management: identify, assess, mitigate and monitor. Test before and during deployment.&#x27; },
+            { id:&#x27;o2&#x27;, label:&#x27;Data\ngovernance&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Training, validation and testing data must be relevant, representative and free from significant bias or errors.&#x27; },
+            { id:&#x27;o3&#x27;, label:&#x27;Technical\ndocs (10yr)&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Detailed documentation proving compliance must be kept and available to authorities for 10 years after launch.&#x27; },
+            { id:&#x27;o4&#x27;, label:&#x27;Automatic\nlogs&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Keep automatically generated logs of system operation for as long as you control the system.&#x27; },
+            { id:&#x27;o5&#x27;, label:&#x27;Instructions\nfor use&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Clear instructions for deployers so they understand the system\&#x27;s capabilities, limitations and correct use.&#x27; },
+            { id:&#x27;o6&#x27;, label:&#x27;Human\noversight&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Design so humans can intervene, override, shut it down, and avoid over-reliance.&#x27; },
+            { id:&#x27;o7&#x27;, label:&#x27;CE marking\n&amp; registry&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Affix CE marking and register the system in the EU high-risk AI database before market launch.&#x27; },
+            { id:&#x27;o8&#x27;, label:&#x27;EU\nDeclaration&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Issue a written EU Declaration of Conformity confirming all requirements are met.&#x27; },
+          ]
+        },
+        {
+          id:&#x27;hr-dep&#x27;, label:&#x27;Deployer\nObligations&#x27;, theme:&#x27;highrisk&#x27;,
+          desc:&#x27;If you use someone else\&#x27;s high-risk AI in your business, these duties apply to you.&#x27;,
+          children: [
+            { id:&#x27;d1&#x27;, label:&#x27;Follow\ninstructions&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Must follow the provider\&#x27;s usage instructions and not use the system in unauthorised ways.&#x27; },
+            { id:&#x27;d2&#x27;, label:&#x27;Human\noversight&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Maintain human oversight during operation and monitor the system\&#x27;s real-world performance.&#x27; },
+            { id:&#x27;d3&#x27;, label:&#x27;Rights impact\nassessment&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Conduct and report a Fundamental Rights Impact Assessment covering affected groups, risks and mitigation.&#x27; },
+            { id:&#x27;d4&#x27;, label:&#x27;GDPR\ncompliance&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;Process any personal data in line with GDPR obligations.&#x27; },
+            { id:&#x27;d5&#x27;, label:&#x27;Corrective\naction&#x27;, theme:&#x27;highrisk&#x27;, desc:&#x27;If non-compliant: fix, withdraw or recall the system and notify all involved parties and authorities.&#x27; },
+          ]
+        }
+      ]
+    },
+    {
+      id: &#x27;transparency&#x27;, label: &#x27;Transparency&#x27;, theme: &#x27;transparency&#x27;,
+      desc: &#x27;Even if your AI is not high-risk, these transparency rules apply when interacting with users or generating content.&#x27;,
+      children: [
+        { id:&#x27;t1&#x27;, label:&#x27;Disclose AI\ninteraction&#x27;, theme:&#x27;transparency&#x27;, desc:&#x27;Users must be informed they are interacting with an AI before or at the start of the interaction.&#x27; },
+        { id:&#x27;t2&#x27;, label:&#x27;Label AI\ncontent&#x27;, theme:&#x27;transparency&#x27;, desc:&#x27;AI-generated outputs must be marked in machine-readable format as AI-generated.&#x27; },
+        { id:&#x27;t3&#x27;, label:&#x27;Disclose\ndeepfakes&#x27;, theme:&#x27;transparency&#x27;, desc:&#x27;Any AI system generating deepfakes must clearly disclose the content is artificially generated.&#x27; },
+        { id:&#x27;t4&#x27;, label:&#x27;Biometric\nnotice&#x27;, theme:&#x27;transparency&#x27;, desc:&#x27;Deployers must inform individuals if biometric or emotion recognition is being used on them.&#x27; },
+        { id:&#x27;t5&#x27;, label:&#x27;Chatbot\ndisclosure&#x27;, theme:&#x27;transparency&#x27;, desc:&#x27;Chatbots must inform users they are talking to a machine, not a human.&#x27; },
+      ]
+    },
+    {
+      id: &#x27;gpai&#x27;, label: &#x27;General-\nPurpose AI&#x27;, theme: &#x27;gpai&#x27;,
+      desc: &#x27;Rules for providers of foundation models and large general-purpose AI systems. Systemic risk models face heavier obligations.&#x27;,
+      children: [
+        { id:&#x27;g1&#x27;, label:&#x27;Technical\ndocumentation&#x27;, theme:&#x27;gpai&#x27;, desc:&#x27;Keep technical documentation up to date and make it available to downstream AI providers who integrate your model.&#x27; },
+        { id:&#x27;g2&#x27;, label:&#x27;Training data\nsummary&#x27;, theme:&#x27;gpai&#x27;, desc:&#x27;Publish a sufficiently detailed public summary of the content used to train the model.&#x27; },
+        { id:&#x27;g3&#x27;, label:&#x27;Copyright\npolicy&#x27;, theme:&#x27;gpai&#x27;, desc:&#x27;Put in place a policy to comply with EU copyright law regarding training data.&#x27; },
+        { id:&#x27;g4&#x27;, label:&#x27;EU\nrepresentative&#x27;, theme:&#x27;gpai&#x27;, desc:&#x27;Providers based outside the EU must appoint an authorised EU representative before placing the model on the market.&#x27; },
+        { id:&#x27;g5&#x27;, label:&#x27;Systemic risk:\nevaluation&#x27;, theme:&#x27;gpai&#x27;, desc:&#x27;If classified as systemic risk: conduct model evaluations and red-teaming exercises.&#x27; },
+        { id:&#x27;g6&#x27;, label:&#x27;Systemic risk:\nincidents&#x27;, theme:&#x27;gpai&#x27;, desc:&#x27;Report serious incidents and corrective measures to the AI Office without delay.&#x27; },
+        { id:&#x27;g7&#x27;, label:&#x27;Systemic risk:\ncybersecurity&#x27;, theme:&#x27;gpai&#x27;, desc:&#x27;Ensure robust cybersecurity for the model and its physical infrastructure.&#x27; },
+      ]
+    },
+    {
+      id: &#x27;sme&#x27;, label: &#x27;SME\nSupport&#x27;, theme: &#x27;sme&#x27;,
+      desc: &#x27;The AI Act includes specific measures to reduce the burden on SMEs and startups. Access to sandboxes is free.&#x27;,
+      children: [
+        { id:&#x27;s1&#x27;, label:&#x27;Free\nsandboxes&#x27;, theme:&#x27;sme&#x27;, desc:&#x27;Access to AI regulatory sandboxes is free for SMEs — controlled environments to develop and test AI before launch.&#x27; },
+        { id:&#x27;s2&#x27;, label:&#x27;Pre-deployment\nguidance&#x27;, theme:&#x27;sme&#x27;, desc:&#x27;SMEs get guidance on compliance, help with standardisation documents, certification and testing facilities.&#x27; },
+        { id:&#x27;s3&#x27;, label:&#x27;Reduced\nfees&#x27;, theme:&#x27;sme&#x27;, desc:&#x27;When setting conformity assessment fees, SME-specific needs must be taken into account.&#x27; },
+        { id:&#x27;s4&#x27;, label:&#x27;Sandbox proof\nof compliance&#x27;, theme:&#x27;sme&#x27;, desc:&#x27;Authorities provide written proof of sandbox activities you can use to demonstrate compliance to regulators.&#x27; },
+        { id:&#x27;s5&#x27;, label:&#x27;Standardised\ntemplates&#x27;, theme:&#x27;sme&#x27;, desc:&#x27;The AI Office provides standardised templates to reduce administrative burden.&#x27; },
+        { id:&#x27;s6&#x27;, label:&#x27;Single info\nplatform&#x27;, theme:&#x27;sme&#x27;, desc:&#x27;A single EU information platform with plain-language guidance on all AI Act obligations.&#x27; },
+        { id:&#x27;s7&#x27;, label:&#x27;Real-world\ntesting&#x27;, theme:&#x27;sme&#x27;, desc:&#x27;SMEs can test high-risk AI in real-world conditions before launch (authority approval, max 6 months).&#x27; },
+      ]
+    },
+    {
+      id: &#x27;penalties&#x27;, label: &#x27;Penalties&#x27;, theme: &#x27;penalties&#x27;,
+      desc: &#x27;Fines are calculated as the higher of a fixed amount or percentage of global annual turnover.&#x27;,
+      children: [
+        { id:&#x27;pen1&#x27;, label:&#x27;€35M / 7%\nturnover&#x27;, theme:&#x27;penalties&#x27;, desc:&#x27;For violating prohibited practices (Article 5). The highest tier — applies to the hardest bans.&#x27; },
+        { id:&#x27;pen2&#x27;, label:&#x27;€15M / 3%\nturnover&#x27;, theme:&#x27;penalties&#x27;, desc:&#x27;For non-compliance with high-risk obligations, notified body requirements and transparency rules.&#x27; },
+        { id:&#x27;pen3&#x27;, label:&#x27;€7.5M / 1%\nturnover&#x27;, theme:&#x27;penalties&#x27;, desc:&#x27;For supplying incorrect or misleading information to authorities. Uses the LOWER of the two figures.&#x27; },
+        { id:&#x27;pen4&#x27;, label:&#x27;Right to\nbe heard&#x27;, theme:&#x27;penalties&#x27;, desc:&#x27;Before any fine is imposed, the provider will always be given a chance to be heard.&#x27; },
+      ]
+    },
+  ]
+};
+
+const canvas = document.getElementById(&#x27;c&#x27;);
+const wrap = document.getElementById(&#x27;canvas-wrap&#x27;);
+const ctx = canvas.getContext(&#x27;2d&#x27;);
+const infoText = document.getElementById(&#x27;info-text&#x27;);
+const infoLabel = document.getElementById(&#x27;info-label&#x27;);
+const bc = document.getElementById(&#x27;breadcrumb&#x27;);
+const legendEl = document.getElementById(&#x27;legend&#x27;);
+
+let W, H;
+function resize() {
+  W = wrap.clientWidth; H = wrap.clientHeight;
+  canvas.width = W * devicePixelRatio;
+  canvas.height = H * devicePixelRatio;
+  canvas.style.width = W + &#x27;px&#x27;; canvas.style.height = H + &#x27;px&#x27;;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  draw();
+}
+
+let stack = [DATA];
+let bubbles = [];
+let hovered = null;
+
+function th(node) { return THEME[node.theme] || THEME.leaf; }
+
+function layoutBubbles(node) {
+  bubbles = [];
+  const cx = W/2, cy = H/2;
+  if (!node.children || !node.children.length) {
+    bubbles.push({ node, x:cx, y:cy, r:80, isCenter:true });
+    return;
+  }
+  const n = node.children.length;
+  const centerR = n &lt;= 3 ? 68 : n &lt;= 6 ? 60 : 52;
+  bubbles.push({ node, x:cx, y:cy, r:centerR, isCenter:true });
+  const orbitR = Math.min(W,H) * 0.355;
+  const childR = Math.max(34, Math.min(50, orbitR / (n * 0.55)));
+  node.children.forEach((child, i) =&gt; {
+    const angle = (i/n)*Math.PI*2 - Math.PI/2;
+    bubbles.push({
+      node: child,
+      x: cx + Math.cos(angle)*orbitR,
+      y: cy + Math.sin(angle)*orbitR,
+      r: childR,
+      isCenter: false,
+      hasKids: !!(child.children &amp;&amp; child.children.length)
+    });
+  });
+}
+
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return [r,g,b];
+}
+
+function drawBubble(b) {
+  const { x, y, r, node, isCenter, hasKids } = b;
+  const t = th(node);
+  const isHov = hovered === b;
+  const radius = r + (isHov ? 3 : 0);
+  const [rr,rg,rb] = hexToRgb(t.base);
+
+  ctx.save();
+
+  // Outer glow on hover
+  if (isHov) {
+    ctx.beginPath();
+    ctx.arc(x, y, radius + 10, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(${rr},${rg},${rb},0.18)`;
+    ctx.fill();
+  }
+
+  // Shadow
+  ctx.shadowColor = `rgba(${rr},${rg},${rb},0.35)`;
+  ctx.shadowBlur = isHov ? 22 : 14;
+  ctx.shadowOffsetY = isHov ? 5 : 3;
+
+  // Main bubble fill
+  const grad = ctx.createRadialGradient(x - radius*0.28, y - radius*0.28, radius*0.05, x, y, radius);
+  grad.addColorStop(0, lightenHex(t.base, 40));
+  grad.addColorStop(0.5, t.base);
+  grad.addColorStop(1, darkenHex(t.base, 30));
+
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI*2);
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  ctx.shadowColor = &#x27;transparent&#x27;; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+
+  // Gloss highlight
+  const glossGrad = ctx.createRadialGradient(x - radius*0.3, y - radius*0.38, 0, x - radius*0.1, y - radius*0.2, radius*0.6);
+  glossGrad.addColorStop(0, &#x27;rgba(255,255,255,0.55)&#x27;);
+  glossGrad.addColorStop(0.5, &#x27;rgba(255,255,255,0.15)&#x27;);
+  glossGrad.addColorStop(1, &#x27;rgba(255,255,255,0)&#x27;);
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI*2);
+  ctx.fillStyle = glossGrad;
+  ctx.fill();
+
+  // Border ring
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI*2);
+  ctx.strokeStyle = `rgba(255,255,255,0.4)`;
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // + badge for drillable nodes
+  if (hasKids &amp;&amp; !isCenter) {
+    const bx = x + radius*0.58, by = y - radius*0.58, br = radius*0.22;
+    ctx.beginPath();
+    ctx.arc(bx, by, br, 0, Math.PI*2);
+    ctx.fillStyle = &#x27;rgba(255,255,255,0.92)&#x27;;
+    ctx.fill();
+    ctx.fillStyle = t.base;
+    ctx.font = `bold ${Math.max(9, br*1.3)}px Inter, sans-serif`;
+    ctx.textAlign = &#x27;center&#x27;; ctx.textBaseline = &#x27;middle&#x27;;
+    ctx.fillText(&#x27;+&#x27;, bx, by+0.5);
+  }
+
+  // Label text
+  const lines = node.label.split(&#x27;\n&#x27;);
+  const fontSize = isCenter ? Math.max(11, radius*0.22) : Math.max(9, radius*0.21);
+  const lineH = fontSize * 1.3;
+  const totalH = lines.length * lineH;
+  ctx.font = `600 ${fontSize}px Inter, sans-serif`;
+  ctx.textAlign = &#x27;center&#x27;; ctx.textBaseline = &#x27;middle&#x27;;
+  ctx.fillStyle = &#x27;#ffffff&#x27;;
+  // subtle text shadow
+  ctx.shadowColor = `rgba(0,0,0,0.35)`;
+  ctx.shadowBlur = 4;
+  lines.forEach((line, i) =&gt; {
+    ctx.fillText(line, x, y - totalH/2 + lineH*i + lineH/2);
+  });
+  ctx.shadowBlur = 0;
+
+  ctx.restore();
+}
+
+function lightenHex(hex, amt) {
+  const [r,g,b] = hexToRgb(hex);
+  return `rgb(${Math.min(255,r+amt)},${Math.min(255,g+amt)},${Math.min(255,b+amt)})`;
+}
+function darkenHex(hex, amt) {
+  const [r,g,b] = hexToRgb(hex);
+  return `rgb(${Math.max(0,r-amt)},${Math.max(0,g-amt)},${Math.max(0,b-amt)})`;
+}
+
+function draw() {
+  ctx.clearRect(0,0,W,H);
+
+  // Soft background circles
+  ctx.save();
+  ctx.globalAlpha = 0.035;
+  ctx.fillStyle = &#x27;#534AB7&#x27;;
+  ctx.beginPath(); ctx.arc(W*0.12, H*0.15, 80, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(W*0.88, H*0.85, 60, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(W*0.85, H*0.18, 40, 0, Math.PI*2); ctx.fill();
+  ctx.globalAlpha = 1;
+  ctx.restore();
+
+  const current = stack[stack.length-1];
+  layoutBubbles(current);
+
+  // Connector lines
+  if (bubbles.length &gt; 1) {
+    const centre = bubbles[0];
+    bubbles.slice(1).forEach(b =&gt; {
+      const t = th(b.node);
+      const [rr,rg,rb] = hexToRgb(t.base);
+      ctx.beginPath();
+      ctx.moveTo(centre.x, centre.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.strokeStyle = `rgba(${rr},${rg},${rb},0.18)`;
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 5]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    });
+  }
+
+  bubbles.forEach(b =&gt; drawBubble(b));
+}
+
+function getBubbleAt(mx, my) {
+  for (let i = bubbles.length-1; i &gt;= 0; i--) {
+    const b = bubbles[i];
+    const dx = mx-b.x, dy = my-b.y;
+    if (dx*dx + dy*dy &lt;= (b.r+6)*(b.r+6)) return b;
+  }
+  return null;
+}
+
+function buildBreadcrumb() {
+  bc.innerHTML = &#x27;&#x27;;
+  stack.forEach((node, i) =&gt; {
+    if (i &gt; 0) { const s = document.createElement(&#x27;span&#x27;); s.className=&#x27;crumb-sep&#x27;; s.textContent=&#x27;›&#x27;; bc.appendChild(s); }
+    if (i &lt; stack.length-1) {
+      const el = document.createElement(&#x27;span&#x27;); el.className=&#x27;crumb&#x27;;
+      el.textContent = node.label.replace(&#x27;\n&#x27;,&#x27; &#x27;);
+      el.onclick = () =&gt; { stack=stack.slice(0,i+1); buildBreadcrumb(); draw(); };
+      bc.appendChild(el);
+    } else {
+      const el = document.createElement(&#x27;span&#x27;); el.className=&#x27;crumb-current&#x27;;
+      el.textContent = node.label.replace(&#x27;\n&#x27;,&#x27; &#x27;);
+      bc.appendChild(el);
+    }
+  });
+}
+
+function buildLegend() {
+  legendEl.innerHTML = &#x27;&#x27;;
+  DATA.children.forEach(child =&gt; {
+    const t = th(child);
+    const item = document.createElement(&#x27;div&#x27;); item.className=&#x27;legend-item&#x27;;
+    const dot = document.createElement(&#x27;div&#x27;); dot.className=&#x27;legend-dot&#x27;;
+    dot.style.background = t.base;
+    item.appendChild(dot);
+    const label = document.createElement(&#x27;span&#x27;);
+    label.textContent = child.label.replace(&#x27;\n&#x27;,&#x27; &#x27;);
+    item.appendChild(label);
+    item.onclick = () =&gt; { stack=[DATA, child]; buildBreadcrumb(); draw(); };
+    legendEl.appendChild(item);
+  });
+}
+
+canvas.addEventListener(&#x27;mousemove&#x27;, e =&gt; {
+  const rect = canvas.getBoundingClientRect();
+  const b = getBubbleAt(e.clientX-rect.left, e.clientY-rect.top);
+  if (b !== hovered) {
+    hovered = b;
+    canvas.style.cursor = b ? &#x27;pointer&#x27; : &#x27;default&#x27;;
+    if (b) {
+      infoLabel.textContent = b.node.label.replace(&#x27;\n&#x27;,&#x27; &#x27;);
+      infoText.textContent = b.node.desc || &#x27;&#x27;;
+    }
+    draw();
+  }
+});
+canvas.addEventListener(&#x27;mouseleave&#x27;, () =&gt; { hovered=null; draw(); });
+
+let clickLock = false;
+canvas.addEventListener(&#x27;click&#x27;, e =&gt; {
+  if (clickLock) return;
+  const rect = canvas.getBoundingClientRect();
+  const b = getBubbleAt(e.clientX-rect.left, e.clientY-rect.top);
+  if (!b) return;
+  if (b.isCenter) {
+    if (stack.length &gt; 1) { stack.pop(); buildBreadcrumb(); hovered=null; draw(); }
+    return;
+  }
+  if (b.node.children &amp;&amp; b.node.children.length) {
+    stack.push(b.node); buildBreadcrumb(); hovered=null; draw();
+  }
+  if (b.node.desc) { infoLabel.textContent=b.node.label.replace(&#x27;\n&#x27;,&#x27; &#x27;); infoText.textContent=b.node.desc; }
+});
+
+buildBreadcrumb();
+buildLegend();
+resize();
+window.addEventListener(&#x27;resize&#x27;, resize);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+" style="height:880px"></iframe>
+    </div>
+  </section>
+
+  <p class="footer-note">Tip: keep this as an HTML dashboard for full interactivity, then link to it from your Google Doc.</p>
+</div>
+<script>
+function showPanel(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
