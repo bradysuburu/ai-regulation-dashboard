@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Global AI Regulation Comparison</title>
+<style>
+:root{
+  --bg:#f6f7fb;
+  --panel:#ffffff;
+  --panel-soft:#f9fafb;
+  --text:#172033;
+  --muted:#667085;
+  --faint:#98a2b3;
+  --border:#e4e7ec;
+  --shadow:0 18px 45px rgba(16,24,40,.08);
+  --radius:22px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 12% 8%, rgba(39,103,73,.10), transparent 26%),
+    radial-gradient(circle at 88% 0%, rgba(183,121,31,.10), transparent 30%),
+    var(--bg);
+  padding:28px;
+}
+.wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 0 32px}
+.hero{
+  background:linear-gradient(135deg,#ffffff 0%,#f9fafb 100%);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  border-radius:28px;
+  padding:28px;
+  margin-bottom:20px;
+}
+.eyebrow{
+  font-size:12px;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  font-weight:700;
+  color:#276749;
+  margin-bottom:8px;
+}
+.hero h1{
+  font-size:34px;
+  line-height:1.08;
+  letter-spacing:-.03em;
+  font-weight:760;
+  margin-bottom:10px;
+}
+.hero p{
+  max-width:760px;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.65;
+}
+.hero-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:18px;
+}
+.hero-pill{
+  border:1px solid var(--border);
+  background:#fff;
+  color:#475467;
+  border-radius:999px;
+  padding:7px 11px;
+  font-size:12px;
+  font-weight:650;
+}
+.spectrum-card{
+  background:rgba(255,255,255,.78);
+  backdrop-filter:blur(14px);
+  border:1px solid var(--border);
+  box-shadow:0 10px 28px rgba(16,24,40,.05);
+  border-radius:20px;
+  padding:16px 18px 18px;
+  margin-bottom:18px;
+}
+.spectrum-label{
+  display:flex;justify-content:space-between;
+  font-size:12px;color:var(--muted);
+  margin-bottom:8px;padding:0 2px;font-weight:650;
+}
+.country-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+  margin-bottom:18px;
+}
+.country-card{
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.88);
+  padding:20px 18px 16px;
+  cursor:pointer;
+  transition:box-shadow .18s,transform .14s,border-color .18s,background .18s;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 6px 18px rgba(16,24,40,.04);
+}
+.country-card:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(16,24,40,.10);background:#fff;}
+.country-card.active{border-width:2px;background:#fff;box-shadow:0 16px 36px rgba(16,24,40,.11);}
+.card-accent{position:absolute;top:0;left:0;right:0;height:5px;border-radius:22px 22px 0 0;}
+.card-flag{font-size:30px;margin-bottom:10px;display:block;line-height:1;}
+.card-name{font-size:16px;font-weight:750;color:var(--text);margin-bottom:5px;letter-spacing:-.01em;}
+.card-stance{font-size:11px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;display:inline-block;margin-bottom:11px;}
+.card-tagline{font-size:12.5px;color:var(--muted);line-height:1.55;}
+.card-meter{margin-top:14px;height:6px;border-radius:999px;background:#eef2f6;overflow:hidden;}
+.card-meter-fill{height:100%;border-radius:999px;transition:width .4s ease;}
+.detail-panel{
+  border-radius:26px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.92);
+  overflow:hidden;
+  min-height:320px;
+  box-shadow:var(--shadow);
+}
+.detail-header{padding:20px 22px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;background:linear-gradient(180deg,#fff,#fbfcfd);}
+.detail-flag{font-size:34px;line-height:1;}
+.detail-title{font-size:19px;font-weight:760;color:var(--text);letter-spacing:-.015em;}
+.detail-subtitle{font-size:12.5px;color:var(--muted);margin-top:3px;}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);padding:0 18px;background:#fff;}
+.tab{font-size:12.5px;font-weight:700;color:var(--muted);padding:13px 14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s,background .15s;}
+.tab:hover{background:#f8fafc;color:#344054;}
+.tab.active{color:var(--text);border-bottom-color:currentColor;background:#fff;}
+.tab-content{padding:20px 22px;}
+.bubble-row{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:16px;}
+.bubble{font-size:12.5px;font-weight:700;padding:7px 12px;border-radius:999px;border:1px solid;cursor:pointer;transition:opacity .15s,transform .12s;line-height:1.3;}
+.bubble:hover{opacity:.86;transform:scale(1.03);}
+.event-list{display:flex;flex-direction:column;gap:12px;}
+.event{display:grid;grid-template-columns:10px 92px 1fr;gap:12px;align-items:start;padding:8px 0;}
+.event-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:6px;box-shadow:0 0 0 4px rgba(16,24,40,.04);}
+.event-date{font-size:11.5px;font-weight:750;color:var(--faint);margin-top:2px;}
+.event-text{font-size:13.5px;color:var(--muted);line-height:1.55;}
+.event-text b{color:var(--text);font-weight:750;}
+.compare-section{margin-top:20px;background:rgba(255,255,255,.78);border:1px solid var(--border);box-shadow:0 10px 28px rgba(16,24,40,.05);border-radius:22px;padding:18px;}
+.compare-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+.compare-col{display:flex;flex-direction:column;gap:7px;}
+.compare-head{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;padding:8px 11px;border-radius:10px;margin-bottom:3px;}
+.compare-item{font-size:12.5px;color:var(--muted);padding:8px 11px;border-radius:10px;background:#f8fafc;line-height:1.45;border:1px solid #edf0f3;}
+.callout{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:13px;line-height:1.6;border:1px solid;}
+@media (max-width:820px){
+  body{padding:16px}
+  .hero{padding:22px}
+  .hero h1{font-size:28px}
+  .country-grid,.compare-grid{grid-template-columns:1fr}
+  .event{grid-template-columns:10px 76px 1fr}
+  .tabs{overflow-x:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<section class="hero">
+  <div class="eyebrow">Interactive briefing</div>
+  <h1>Global AI Regulation Comparison</h1>
+  <p>Compare how the European Union, United States, and Argentina are approaching AI governance — from strict risk-based compliance to innovation-first executive orders and experimental AI regulation.</p>
+  <div class="hero-meta">
+    <span class="hero-pill">EU AI Act</span>
+    <span class="hero-pill">U.S. executive orders</span>
+    <span class="hero-pill">Argentina AI corporations</span>
+    <span class="hero-pill">Timelines + impact notes</span>
+  </div>
+</section>
+
+<section class="spectrum-card">
+<div class="spectrum-label">
+  <span>More regulation / compliance burden</span>
+  <span>Less regulation / faster deployment</span>
+</div>
+<div style="position:relative;height:10px;border-radius:999px;background:linear-gradient(90deg,#276749,#B7791F,#9B2C2C);margin-bottom:8px;">
+  <div style="position:absolute;left:12%;top:-5px;display:flex;flex-direction:column;align-items:center;">
+    <div style="width:2px;height:20px;background:#276749;border-radius:1px;"></div>
+    <span style="font-size:10px;color:#276749;font-weight:500;margin-top:2px;white-space:nowrap;">EU</span>
+  </div>
+  <div style="position:absolute;left:68%;top:-5px;display:flex;flex-direction:column;align-items:center;">
+    <div style="width:2px;height:20px;background:#B7791F;border-radius:1px;"></div>
+    <span style="font-size:10px;color:#B7791F;font-weight:500;margin-top:2px;white-space:nowrap;">US</span>
+  </div>
+  <div style="position:absolute;left:93%;top:-5px;display:flex;flex-direction:column;align-items:center;">
+    <div style="width:2px;height:20px;background:#9B2C2C;border-radius:1px;"></div>
+    <span style="font-size:10px;color:#9B2C2C;font-weight:500;margin-top:2px;white-space:nowrap;">ARG</span>
+  </div>
+</div>
+<div style="margin-bottom:4px;"></div>
+</section>
+
+<div class="country-grid">
+  <div class="country-card active" id="card-eu" onclick="selectCountry('eu')" style="border-color:#276749;">
+    <div class="card-accent" style="background:#276749;"></div>
+    <span class="card-flag">🇪🇺</span>
+    <div class="card-name">European Union</div>
+    <div class="card-stance" style="background:#C6F6D5;color:#1C4532;">Comprehensive</div>
+    <div class="card-tagline">First major AI-specific law. Risk-based framework with hard prohibitions and heavy compliance for high-risk systems.</div>
+    <div class="card-meter"><div class="card-meter-fill" style="width:88%;background:#276749;"></div></div>
+  </div>
+
+  <div class="country-card" id="card-us" onclick="selectCountry('us')" style="">
+    <div class="card-accent" style="background:#B7791F;"></div>
+    <span class="card-flag">🇺🇸</span>
+    <div class="card-name">United States</div>
+    <div class="card-stance" style="background:#FEEBC8;color:#744210;">Innovation-first</div>
+    <div class="card-tagline">No federal AI law. Trump reversed Biden's safety EOs and is actively dismantling state-level rules to keep America dominant.</div>
+    <div class="card-meter"><div class="card-meter-fill" style="width:28%;background:#B7791F;"></div></div>
+  </div>
+
+  <div class="country-card" id="card-arg" onclick="selectCountry('arg')" style="">
+    <div class="card-accent" style="background:#9B2C2C;"></div>
+    <span class="card-flag">🇦🇷</span>
+    <div class="card-name">Argentina</div>
+    <div class="card-stance" style="background:#FED7D7;color:#63171B;">Zero regulation</div>
+    <div class="card-tagline">Milei proposes AI-run corporations with no human requirement — a race to the bottom designed to attract tech capital.</div>
+    <div class="card-meter"><div class="card-meter-fill" style="width:4%;background:#9B2C2C;"></div></div>
+  </div>
+</div>
+
+<div class="detail-panel" id="detail-panel">
+  <div class="detail-header">
+    <span class="detail-flag" id="d-flag">🇪🇺</span>
+    <div class="detail-title-group">
+      <div class="detail-title" id="d-title">European Union — AI Act</div>
+      <div class="detail-subtitle" id="d-sub">In force 2024–2026 · Risk-based · Extraterritorial reach</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="selectTab(0)">Key rules</div>
+    <div class="tab" onclick="selectTab(1)">Timeline</div>
+    <div class="tab" onclick="selectTab(2)">Impact on innovation</div>
+  </div>
+
+  <div id="tab-content-0" class="tab-content">
+    <div id="bubbles-area" class="bubble-row"></div>
+    <div id="callout-area"></div>
+  </div>
+  <div id="tab-content-1" class="tab-content" style="display:none;">
+    <div class="event-list" id="timeline-area"></div>
+  </div>
+  <div id="tab-content-2" class="tab-content" style="display:none;">
+    <div id="impact-area"></div>
+  </div>
+</div>
+
+<section class="compare-section">
+  <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--faint);margin-bottom:12px;">Side-by-side comparison</div>
+  <div class="compare-grid">
+    <div class="compare-col">
+      <div class="compare-head" style="background:#C6F6D5;color:#1C4532;">🇪🇺 EU</div>
+      <div class="compare-item">Hard prohibitions on manipulation, biometrics, social scoring</div>
+      <div class="compare-item">Mandatory CE marking + EU database registration</div>
+      <div class="compare-item">Fines up to €35M or 7% global turnover</div>
+      <div class="compare-item">Apple denied Siri in EU over compliance gaps</div>
+      <div class="compare-item">Free sandboxes for SMEs</div>
+    </div>
+    <div class="compare-col">
+      <div class="compare-head" style="background:#FEEBC8;color:#744210;">🇺🇸 US</div>
+      <div class="compare-item">No federal AI law; EO-only governance</div>
+      <div class="compare-item">Trump revoked Biden safety EO on Day 1</div>
+      <div class="compare-item">June 2026 EO: gov't gets 30-day preview of frontier models</div>
+      <div class="compare-item">Anthropic's Mythos/Fable 5 suspended by export-control directive</div>
+      <div class="compare-item">States blocked from inconsistent AI laws</div>
+    </div>
+    <div class="compare-col">
+      <div class="compare-head" style="background:#FED7D7;color:#63171B;">🇦🇷 Argentina</div>
+      <div class="compare-item">Proposed "non-human corporations" — AI as legal entity</div>
+      <div class="compare-item">No AI regulation; zero compliance burden</div>
+      <div class="compare-item">Low taxes + new corporate structure as tech incentive</div>
+      <div class="compare-item">AI agents can hire, fire, contract, sue</div>
+      <div class="compare-item">Framed as the LLC of the AI Capitalism era</div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script>
+const DATA = {
+  eu: {
+    flag:'🇪🇺', title:'European Union — AI Act',
+    sub:'In force 2024–2026 · Risk-based · Extraterritorial reach',
+    color:'#276749', light:'#C6F6D5', dark:'#1C4532',
+    bubbles:[
+      {label:'Hard prohibitions',color:'#9B2C2C',light:'#FED7D7',dark:'#63171B'},
+      {label:'High-risk framework',color:'#744210',light:'#FEEBC8',dark:'#744210'},
+      {label:'CE marking required',color:'#276749',light:'#C6F6D5',dark:'#1C4532'},
+      {label:'Transparency rules',color:'#2C5282',light:'#BEE3F8',dark:'#1A365D'},
+      {label:'GPAI model rules',color:'#553C9A',light:'#E9D8FD',dark:'#322659'},
+      {label:'Free SME sandboxes',color:'#2F855A',light:'#C6F6D5',dark:'#1C4532'},
+      {label:'Fines up to 7% turnover',color:'#9B2C2C',light:'#FED7D7',dark:'#63171B'},
+      {label:'Apple denied Siri (EU)',color:'#744210',light:'#FEEBC8',dark:'#744210'},
+    ],
+    callout:{text:'The EU AI Act is the world\'s first comprehensive AI law. Its extraterritorial reach means any company selling AI to EU users must comply — even if they\'re based elsewhere.',light:'#C6F6D5',dark:'#1C4532',border:'#A6D5BA'},
+    timeline:[
+      {date:'2024',text:'<b>EU AI Act passed.</b> First major AI-specific legislation globally. Risk-based framework enters force.'},
+      {date:'Aug 2025',text:'<b>Prohibited practices</b> provisions apply. Hard bans on manipulation, biometrics scraping, social scoring take effect.'},
+      {date:'2026',text:'<b>High-risk obligations</b> fully apply. Providers must register, CE-mark, and submit documentation.'},
+      {date:'Ongoing',text:'<b>Apple denied Siri in EU</b> due to AI Act compliance issues — demonstrating extraterritorial enforcement power.'},
+      {date:'Ongoing',text:'<b>SME sandboxes</b> required in every member state. Free access, written proof of compliance activities provided.'},
+    ],
+    impact:'The EU prioritises citizen protection over speed of deployment. This creates friction for companies launching fast — but also creates trust. The high compliance bar has already influenced global AI governance.'
+  },
+  us: {
+    flag:'🇺🇸', title:'United States — Executive Order approach',
+    sub:'No federal AI law · EO-driven · Innovation-first posture',
+    color:'#B7791F', light:'#FEEBC8', dark:'#744210',
+    bubbles:[
+      {label:'Biden EO revoked Day 1',color:'#9B2C2C',light:'#FED7D7',dark:'#63171B'},
+      {label:'AI Action Plan Jul 2025',color:'#B7791F',light:'#FEEBC8',dark:'#744210'},
+      {label:'State laws preempted Dec 2025',color:'#B7791F',light:'#FEEBC8',dark:'#744210'},
+      {label:'National Cyber Strategy Mar 2026',color:'#2C5282',light:'#BEE3F8',dark:'#1A365D'},
+      {label:'June 2026 EO: 30-day preview',color:'#553C9A',light:'#E9D8FD',dark:'#322659'},
+      {label:'Mythos/Fable 5 suspended',color:'#9B2C2C',light:'#FED7D7',dark:'#63171B'},
+      {label:'CA SB1047 vetoed by Newsom',color:'#744210',light:'#FEEBC8',dark:'#744210'},
+      {label:'AB2013: training data disclosure',color:'#2F855A',light:'#C6F6D5',dark:'#1C4532'},
+    ],
+    callout:{text:'The US has no federal AI law. Trump\'s approach is EO-driven: remove friction, keep America dominant, let industry self-regulate — but require government early access to frontier models.',light:'#FEEBC8',dark:'#744210',border:'#F5D583'},
+    timeline:[
+      {date:'Jan 20 2025',text:'<b>Trump Day 1:</b> Revokes Biden\'s Executive Order 14110 (AI safety and oversight guidelines).'},
+      {date:'Jul 2025',text:'<b>AI Action Plan released.</b> Calls for removing regulations that hinder US AI lead.'},
+      {date:'Dec 2025',text:'<b>EO preempts state laws</b> — makes it easier to comply nationally, blocks inconsistent state rules.'},
+      {date:'Mar 2026',text:'<b>National Cyber Strategy</b> — outlines priorities for US dominance in cyberspace.'},
+      {date:'Apr 2026',text:'<b>Anthropic\'s Mythos</b> announces it found hundreds of vulnerabilities in US critical infrastructure systems.'},
+      {date:'Jun 2 2026',text:'<b>EO: "Promoting Advanced AI Innovation and Security."</b> Government gets 30-day preview of frontier models. No mandatory licensing.'},
+      {date:'Jun 2026',text:'<b>Mythos & Fable 5 suspended</b> via export-control directive. Anthropic believes Amazon is behind the directive.'},
+      {date:'Jan 2026',text:'<b>AB2013</b> (California): Requires generative AI developers to disclose training data. Passed Jan 1 2026.'},
+    ],
+    impact:'The US is betting that innovation speed beats regulatory caution. With no federal law, frontier models face only executive scrutiny — but the June 2026 EO shows the government can still exert control through other levers.'
+  },
+  arg: {
+    flag:'🇦🇷', title:'Argentina — Non-human corporations',
+    sub:'Proposed legislation · Zero AI regulation · Buenos Aires tech hub play',
+    color:'#9B2C2C', light:'#FED7D7', dark:'#63171B',
+    bubbles:[
+      {label:'AI-run corporations',color:'#9B2C2C',light:'#FED7D7',dark:'#63171B'},
+      {label:'Human involvement optional',color:'#9B2C2C',light:'#FED7D7',dark:'#63171B'},
+      {label:'No AI regulation',color:'#744210',light:'#FEEBC8',dark:'#744210'},
+      {label:'Low taxes incentive',color:'#2F855A',light:'#C6F6D5',dark:'#1C4532'},
+      {label:'AI can hire & fire',color:'#9B2C2C',light:'#FED7D7',dark:'#63171B'},
+      {label:'AI can sue in court',color:'#9B2C2C',light:'#FED7D7',dark:'#63171B'},
+      {label:'Buenos Aires tech hub',color:'#2C5282',light:'#BEE3F8',dark:'#1A365D'},
+      {label:'Milei: "AI Capitalism era"',color:'#553C9A',light:'#E9D8FD',dark:'#322659'},
+    ],
+    callout:{text:'Argentina\'s proposal is the most radical position on earth: AI agents as legal corporations, with human involvement entirely optional. President Milei draws an explicit parallel to historical LLC innovation.',light:'#FED7D7',dark:'#63171B',border:'#FBCAC4'},
+    timeline:[
+      {date:'2024',text:'<b>Javier Milei</b> takes office. Broadly deregulatory agenda applies to AI as well.'},
+      {date:'2025',text:'<b>Proposed legislation</b> for "non-human corporations" introduced in Buenos Aires.'},
+      {date:'2025–26',text:'<b>No AI regulation passed.</b> Zero compliance burden. Low tax rates as tech attraction.'},
+      {date:'2026',text:'<b>Buenos Aires</b> positioned as alternative to EU compliance burden and US uncertainty for AI startups.'},
+      {date:'Proposed',text:'<b>AI agents</b> would be able to hire workers, execute contracts, and sue in court without human sign-off.'},
+    ],
+    impact:'Argentina is playing a long game: attract the companies that find EU rules too burdensome and US opacity too uncertain. With no AI law and a new corporate structure that removes human oversight requirements, it\'s a radical deregulation play.'
+  }
+};
+
+let currentCountry = 'eu';
+let currentTab = 0;
+
+function selectCountry(id) {
+  currentCountry = id;
+  currentTab = 0;
+  document.querySelectorAll('.country-card').forEach(c => {
+    c.classList.remove('active');
+    c.style.borderColor = '';
+    c.style.borderWidth = '';
+  });
+  const card = document.getElementById('card-'+id);
+  card.classList.add('active');
+  card.style.borderColor = DATA[id].color;
+  card.style.borderWidth = '1.5px';
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===0));
+  [0,1,2].forEach(i => {
+    document.getElementById('tab-content-'+i).style.display = i===0 ? '' : 'none';
+  });
+  renderDetail();
+}
+
+function selectTab(i) {
+  currentTab = i;
+  document.querySelectorAll('.tab').forEach((t,j) => t.classList.toggle('active', j===i));
+  [0,1,2].forEach(j => {
+    document.getElementById('tab-content-'+j).style.display = j===i ? '' : 'none';
+  });
+  renderDetail();
+}
+
+function renderDetail() {
+  const d = DATA[currentCountry];
+  document.getElementById('d-flag').textContent = d.flag;
+  document.getElementById('d-title').textContent = d.title;
+  document.getElementById('d-sub').textContent = d.sub;
+
+  if (currentTab === 0) {
+    const ba = document.getElementById('bubbles-area');
+    ba.innerHTML = '';
+    d.bubbles.forEach(b => {
+      const el = document.createElement('div');
+      el.className = 'bubble';
+      el.textContent = b.label;
+      el.style.background = b.light;
+      el.style.color = b.dark;
+      el.style.borderColor = b.color+'55';
+      ba.appendChild(el);
+    });
+    const ca = document.getElementById('callout-area');
+    ca.innerHTML = `<div class="callout" style="background:${d.callout.light};color:${d.callout.dark};border-color:${d.callout.border};">${d.callout.text}</div>`;
+  }
+
+  if (currentTab === 1) {
+    const ta = document.getElementById('timeline-area');
+    ta.innerHTML = '';
+    d.timeline.forEach(e => {
+      ta.innerHTML += `<div class="event">
+        <div class="event-dot" style="background:${d.color};"></div>
+        <div class="event-date">${e.date}</div>
+        <div class="event-text">${e.text}</div>
+      </div>`;
+    });
+  }
+
+  if (currentTab === 2) {
+    const ia = document.getElementById('impact-area');
+    const keyTension = currentCountry==='eu'?'Protection vs innovation speed. The EU bets that trusted AI wins long-term — even if it loses short-term market share to less regulated rivals.':currentCountry==='us'?'Speed vs oversight. The US prioritizes frontier AI development with minimal regulatory friction — but misses standards-setting opportunity.':'Regulation vs capital. Argentina aims to become the "anything-goes" AI jurisdiction to attract refugee tech companies. Long-term viability unknown.';
+    ia.innerHTML = `<div style="font-size:13px;color:var(--muted);line-height:1.65;">${d.impact}</div>
+    <div class="callout" style="margin-top:14px;background:${d.callout.light};color:${d.callout.dark};border-color:${d.callout.border};">
+      <span style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:4px;">Key tension</span>
+      ${keyTension}
+    </div>`;
+  }
+}
+
+renderDetail();
+</script>
+
+</body>
+</html>
