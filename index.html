@@ -1,0 +1,2483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SafelyAI | AI Regulation Dashboard</title>
+<!-- SafelyAI dashboard v24: removed global source-link block shown above US and Frontier pages -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;600;700;800&display=swap');
+:root{
+  --night:#151713;
+  --soil:#241b14;
+  --bark:#493525;
+  --cedar:#234332;
+  --leaf:#3e6f4f;
+  --moss:#78946f;
+  --lichen:#becaa7;
+  --cream:#f2ead8;
+  --paper:#fff7e7;
+  --paper-soft:rgba(255,247,231,.82);
+  --ink:#241d17;
+  --muted:#766b5d;
+  --line:rgba(255,247,231,.22);
+  --dark-line:rgba(36,27,20,.18);
+  --copper:#b9824f;
+  --shadow:0 24px 70px rgba(0,0,0,.28);
+  --radius:30px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{
+  scroll-behavior:smooth;
+  background:#102015;
+  overscroll-behavior-y:none;
+}
+body{
+  font-family:"Cormorant Garamond", Georgia, "Times New Roman", serif;
+  color:var(--cream);
+  background:
+    radial-gradient(circle at 8% 9%, rgba(120,148,111,.38), transparent 27%),
+    radial-gradient(circle at 91% 18%, rgba(185,130,79,.20), transparent 30%),
+    radial-gradient(circle at 72% 82%, rgba(62,111,79,.32), transparent 34%),
+    linear-gradient(135deg,#131611 0%,#263a2b 38%,#1b2119 66%,#33251b 100%);
+  min-height:100vh;
+  overflow-x:hidden;
+  background-color:#102015;
+  overscroll-behavior-y:none;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(255,247,231,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,247,231,.026) 1px, transparent 1px);
+  background-size:42px 42px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),rgba(0,0,0,.45));
+  pointer-events:none;
+  z-index:-3;
+}
+body::after{
+  content:"";
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse at 15% 30%, rgba(255,247,231,.055), transparent 42%),
+    radial-gradient(ellipse at 88% 67%, rgba(255,247,231,.045), transparent 36%),
+    linear-gradient(115deg, transparent 0 43%, rgba(255,247,231,.045) 43.2%, transparent 43.7% 100%);
+  pointer-events:none;
+  z-index:-2;
+}
+.vines{
+  position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.82;
+}
+.vines svg{width:100%;height:100%;display:block}
+button,a{font:inherit}
+.drawer p,.drawer button small,.kicker,.pill,.tag,.scale-item span,.scale-labels,.card p,.card li,.source-list a,.notice,.event p,.model-meta,.model-table,.use-chip{font-family:"Manrope", system-ui, sans-serif;}
+a{color:#e5c28d;text-decoration-thickness:1px;text-underline-offset:3px}
+.menu-btn{
+  position:fixed;top:18px;left:18px;z-index:80;
+  width:50px;height:50px;border-radius:999px;border:1px solid var(--line);
+  background:rgba(21,23,19,.72);backdrop-filter:blur(16px);
+  box-shadow:0 14px 34px rgba(0,0,0,.26);
+  cursor:pointer;display:grid;place-items:center;
+}
+.menu-btn span,.menu-btn span::before,.menu-btn span::after{
+  display:block;width:20px;height:2px;background:var(--cream);border-radius:2px;content:"";
+}
+.menu-btn span::before{transform:translateY(-7px)}
+.menu-btn span::after{transform:translateY(5px)}
+.drawer{
+  position:fixed;inset:0 auto 0 0;width:min(370px,88vw);
+  background:rgba(22,27,20,.94);backdrop-filter:blur(20px);
+  border-right:1px solid var(--line);box-shadow:var(--shadow);
+  transform:translateX(-102%);transition:.28s ease;z-index:70;
+  padding:88px 24px 24px;overflow-y:auto;
+}
+.drawer.open{transform:translateX(0)}
+.drawer h2{font-size:31px;letter-spacing:-.04em;margin-bottom:8px;color:var(--cream);font-weight:500}
+.drawer p{font-size:14px;color:rgba(242,234,216,.72);line-height:1.55;margin-bottom:22px}
+.drawer button{
+  width:100%;text-align:left;border:1px solid transparent;background:transparent;
+  border-radius:18px;padding:14px 14px;margin:5px 0;cursor:pointer;
+  color:var(--cream);transition:.15s ease;
+}
+.drawer button small{display:block;color:rgba(242,234,216,.58);font-size:12px;margin-top:3px}
+.drawer button:hover,.drawer button.active{background:rgba(120,148,111,.20);border-color:var(--line)}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.38);z-index:60;display:none}
+.scrim.open{display:block}
+.shell{width:min(1180px,calc(100% - 36px));margin:0 auto;padding:34px 0 56px}
+.hero{
+  min-height:82vh;display:grid;align-items:center;padding:78px 0 34px;
+}
+.hero-card{
+  border:1px solid var(--line);border-radius:44px;
+  background:
+    linear-gradient(135deg,rgba(255,247,231,.18),rgba(255,247,231,.06)),
+    rgba(15,18,14,.58);
+  box-shadow:var(--shadow);padding:60px;position:relative;overflow:hidden;
+}
+.hero-card::before{
+  content:"";position:absolute;inset:18px;border:1px solid rgba(255,247,231,.11);
+  border-radius:34px;pointer-events:none;
+}
+.hero-card::after{
+  content:"";position:absolute;right:-115px;top:-120px;width:360px;height:360px;border-radius:50%;
+  background:radial-gradient(circle,rgba(120,148,111,.50),rgba(185,130,79,.13),transparent 68%);
+}
+.kicker{font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:#d9c89f;font-weight:700;margin-bottom:18px}
+h1{
+  font-size:clamp(66px,10vw,150px);line-height:.78;letter-spacing:-.095em;font-weight:700;color:var(--cream);
+  text-shadow:0 18px 42px rgba(0,0,0,.26);
+}
+h1 .ai-mark{
+  font-style:italic;font-weight:500;color:#d8c58f;
+  letter-spacing:-.12em;
+}
+.subtitle{font-size:clamp(18px,2.5vw,28px);line-height:1.35;color:rgba(242,234,216,.82);max-width:790px;margin-top:26px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.pill{
+  border:1px solid var(--line);border-radius:999px;padding:12px 18px;
+  background:rgba(255,247,231,.10);color:var(--cream);text-decoration:none;display:inline-flex;gap:8px;align-items:center;
+}
+.page{display:none;animation:fade .2s ease}
+.page.active{display:block}
+@keyframes fade{from{opacity:.65;transform:translateY(8px)}to{opacity:1;transform:none}}
+.page-head{
+  padding:98px 0 28px;border-bottom:1px solid var(--line);margin-bottom:26px;
+}
+.page-head h2{font-size:clamp(40px,6vw,78px);letter-spacing:-.06em;font-weight:500;color:var(--cream)}
+.page-head p{font-size:18px;color:rgba(242,234,216,.72);line-height:1.55;max-width:850px;margin-top:12px}
+.reg-scale,.statement,.earth-panel,.map-panel{
+  border:1px solid var(--line);border-radius:34px;padding:30px;
+  background:
+    linear-gradient(145deg,rgba(255,247,231,.14),rgba(255,247,231,.055)),
+    rgba(16,19,14,.62);
+  box-shadow:0 18px 48px rgba(0,0,0,.18);
+}
+.reg-scale{margin-top:36px}
+.scale-line{
+  position:relative;height:12px;border-radius:999px;margin:58px 22px 24px;
+  background:linear-gradient(90deg,#b9824f,#bfa96a,#78946f,#3e6f4f);
+  box-shadow:0 0 28px rgba(120,148,111,.28);
+}
+.scale-item{position:absolute;top:-36px;transform:translateX(-50%);text-align:center}
+.scale-dot{width:23px;height:23px;border-radius:50%;background:var(--cream);border:3px solid #151713;margin:0 auto 8px}
+.scale-item b{font-size:14px;display:block;color:var(--cream)}
+.scale-item span{font-size:12px;color:rgba(242,234,216,.62)}
+.scale-labels{display:flex;justify-content:space-between;color:rgba(242,234,216,.62);font-size:12px}
+.statement{
+  margin-top:24px;
+  display:grid;
+  grid-template-columns:1.05fr .95fr;
+  gap:26px;
+  align-items:start;
+}
+.statement h2{font-size:clamp(34px,4.5vw,58px);letter-spacing:-.055em;font-weight:500;line-height:.98;color:var(--cream)}
+.statement p{font-size:17px;line-height:1.74;color:rgba(242,234,216,.77);margin-bottom:15px}
+.statement-mark{
+  min-height:310px;border-radius:28px;border:1px solid var(--line);
+  background:
+    radial-gradient(circle at 32% 28%,rgba(120,148,111,.55),transparent 28%),
+    radial-gradient(circle at 68% 63%,rgba(185,130,79,.28),transparent 31%),
+    linear-gradient(135deg,rgba(255,247,231,.08),rgba(0,0,0,.15));
+  position:relative;overflow:hidden;
+}
+.statement-mark::before{
+  content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(255,247,231,.17);
+  transform:rotate(28deg);
+}
+.statement-mark::after{
+  content:"Use powerful tools with human judgment.";
+  position:absolute;left:24px;bottom:22px;right:24px;
+  font-size:34px;line-height:.95;letter-spacing:-.05em;color:rgba(255,247,231,.78);
+}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;margin:24px 0}
+.card{
+  grid-column:span 4;
+  background:rgba(255,247,231,.88);color:var(--ink);
+  border:1px solid rgba(36,27,20,.14);
+  border-radius:var(--radius);padding:24px;box-shadow:0 16px 42px rgba(0,0,0,.16);
+}
+.card.dark{background:rgba(16,19,14,.62);color:var(--cream);border-color:var(--line)}
+.card.wide{grid-column:span 8}.card.full{grid-column:1/-1}
+.card h3{font-size:24px;letter-spacing:-.03em;margin-bottom:10px}
+.card p,.card li{font-size:15px;line-height:1.62;color:var(--muted)}
+.card.dark p,.card.dark li{color:rgba(242,234,216,.72)}
+.card ul{padding-left:20px;margin-top:10px}
+.source-list{display:grid;gap:10px;margin-top:14px}
+.source-list a{
+  display:block;padding:12px 14px;border:1px solid rgba(36,27,20,.14);border-radius:16px;
+  background:rgba(255,247,231,.65);font-size:14px;text-decoration:none;color:var(--leaf);
+}
+.map-panel{padding:28px;margin-top:20px}
+.comparison-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}
+.country{
+  min-height:330px;border-radius:28px;padding:24px;border:1px solid var(--line);
+  background:linear-gradient(160deg,rgba(255,247,231,.16),rgba(255,247,231,.045));
+  position:relative;overflow:hidden;
+}
+.country::before{
+  content:"";position:absolute;right:-40px;top:-40px;width:130px;height:130px;border-radius:50%;
+  background:rgba(120,148,111,.18);
+}
+.country h3{font-size:28px;letter-spacing:-.04em;color:var(--cream);margin-bottom:12px}
+.country .tag{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:7px 10px;font-size:12px;color:#e5c28d;margin-bottom:16px}
+.country p,.country li{font-size:15px;line-height:1.58;color:rgba(242,234,216,.73)}
+.country ul{padding-left:19px;margin-top:12px}
+.mini-scale{height:8px;border-radius:99px;background:rgba(255,247,231,.14);margin-top:18px;position:relative;overflow:hidden}
+.mini-scale span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--copper),var(--moss),var(--leaf))}
+.bubble-board{
+  position:relative;min-height:650px;border-radius:32px;border:1px solid var(--line);
+  background:
+    radial-gradient(circle at 26% 28%,rgba(120,148,111,.18),transparent 22%),
+    radial-gradient(circle at 72% 65%,rgba(185,130,79,.13),transparent 25%),
+    rgba(16,19,14,.45);
+  overflow:hidden;margin-top:18px;padding:28px;
+}
+.bubble{
+  position:absolute;border-radius:50%;border:1px solid rgba(255,247,231,.35);
+  background:radial-gradient(circle at 35% 30%,rgba(255,247,231,.28),rgba(120,148,111,.20) 45%,rgba(20,23,18,.68) 100%);
+  box-shadow:inset 0 0 28px rgba(255,247,231,.08),0 18px 44px rgba(0,0,0,.22);
+  display:grid;place-items:center;text-align:center;padding:18px;color:var(--cream);
+  cursor:pointer;transition:.18s ease;
+}
+.bubble:hover{transform:translateY(-4px) scale(1.02);border-color:#e5c28d}
+.bubble b{display:block;font-size:16px;line-height:1.15}
+.bubble small{display:block;font-size:11px;color:rgba(242,234,216,.64);margin-top:5px}
+.bubble-detail{
+  position:absolute;left:28px;right:28px;bottom:28px;border:1px solid var(--line);border-radius:24px;
+  background:rgba(255,247,231,.92);color:var(--ink);padding:20px;box-shadow:0 20px 45px rgba(0,0,0,.20);
+}
+.bubble-detail h3{font-size:23px;letter-spacing:-.03em;margin-bottom:6px}
+.bubble-detail p{font-size:14px;line-height:1.58;color:var(--muted)}
+.timeline{position:relative;padding-left:26px;margin-top:12px}
+.timeline::before{content:"";position:absolute;left:6px;top:4px;bottom:4px;width:1px;background:var(--line)}
+.event{position:relative;margin:0 0 18px}
+.event::before{content:"";position:absolute;left:-26px;top:6px;width:12px;height:12px;border-radius:50%;background:#d9c89f}
+.event time{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#d9c89f;font-weight:700}
+.event h4{font-size:18px;margin:4px 0;color:var(--cream)}
+.event p{font-size:15px;line-height:1.62;color:rgba(242,234,216,.70)}
+.notice{border-left:4px solid #d9c89f;padding:14px 16px;background:rgba(255,247,231,.10);border-radius:0 16px 16px 0;color:rgba(242,234,216,.78);line-height:1.55}
+
+.model-hero{
+  display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:22px;
+}
+.model-score{
+  border:1px solid var(--line);border-radius:30px;padding:24px;
+  background:linear-gradient(145deg,rgba(255,247,231,.13),rgba(255,247,231,.045));
+}
+.model-score h3{font-size:30px;letter-spacing:-.04em;color:var(--cream);margin-bottom:10px}
+.model-score p{font-family:"Manrope",system-ui,sans-serif;color:rgba(242,234,216,.72);line-height:1.6;font-size:14px}
+.model-table{width:100%;border-collapse:separate;border-spacing:0 12px;margin-top:18px}
+.model-table th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:#d9c89f;padding:0 12px 4px}
+.model-table td{
+  background:rgba(255,247,231,.88);color:var(--ink);padding:14px 12px;
+  border-top:1px solid rgba(36,27,20,.13);border-bottom:1px solid rgba(36,27,20,.13);
+  font-size:14px;vertical-align:top;
+}
+.model-table td:first-child{border-left:1px solid rgba(36,27,20,.13);border-radius:18px 0 0 18px;font-weight:800}
+.model-table td:last-child{border-right:1px solid rgba(36,27,20,.13);border-radius:0 18px 18px 0}
+.model-name{font-family:"Cormorant Garamond", Georgia, serif;font-size:22px;font-weight:700;letter-spacing:-.03em}
+.model-meta{font-size:12px;color:var(--muted);margin-top:3px}
+.use-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.use-card{
+  border:1px solid var(--line);border-radius:24px;padding:18px;
+  background:rgba(16,19,14,.48);
+}
+.use-card h4{font-size:22px;letter-spacing:-.03em;color:var(--cream);margin-bottom:8px}
+.use-card p{font-family:"Manrope",system-ui,sans-serif;color:rgba(242,234,216,.70);font-size:14px;line-height:1.55}
+.use-chip{
+  display:inline-block;border:1px solid var(--line);border-radius:999px;padding:6px 9px;
+  color:#e5c28d;font-size:11px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.08em;
+}
+
+.home-landing{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:56px 0;
+  position:relative;
+  isolation:isolate;
+}
+.home-landing .hero-card{
+  animation:openingFloat 6s ease-in-out infinite alternate;
+}
+@keyframes openingFloat{
+  from{transform:translateY(0) scale(1)}
+  to{transform:translateY(-10px) scale(1.012)}
+}
+.home-landing::after{
+  content:"";
+  position:absolute;
+  bottom:30px;
+  left:50%;
+  width:1px;
+  height:78px;
+  transform:translateX(-50%);
+  background:linear-gradient(to bottom,rgba(242,234,216,0),rgba(242,234,216,.72),rgba(242,234,216,0));
+  animation:breathingLine 2.6s ease-in-out infinite;
+}
+.home-landing::before{
+  content:"";
+  position:absolute;
+  bottom:44px;
+  left:50%;
+  width:12px;
+  height:12px;
+  border-right:1px solid rgba(242,234,216,.68);
+  border-bottom:1px solid rgba(242,234,216,.68);
+  transform:translateX(-50%) rotate(45deg);
+  animation:quietArrow 2.6s ease-in-out infinite;
+}
+@keyframes breathingLine{
+  0%,100%{opacity:.32;transform:translateX(-50%) scaleY(.62)}
+  50%{opacity:.95;transform:translateX(-50%) scaleY(1)}
+}
+@keyframes quietArrow{
+  0%,100%{opacity:.25;bottom:52px}
+  50%{opacity:.9;bottom:36px}
+}
+.hero-card.minimal{
+  width:min(980px,100%);
+  min-height:62vh;
+  display:grid;
+  align-content:center;
+  background:
+    radial-gradient(circle at 72% 30%,rgba(120,148,111,.23),transparent 30%),
+    linear-gradient(135deg,rgba(255,247,231,.13),rgba(255,247,231,.035)),
+    rgba(15,18,14,.54);
+}
+.home-depth{
+  min-height:100vh;
+  padding:90px 0 70px;
+  position:relative;
+}
+.home-depth::before{
+  content:"";
+  position:absolute;
+  inset:0 calc(50% - 50vw);
+  background:
+    radial-gradient(circle at 12% 18%,rgba(185,130,79,.16),transparent 28%),
+    radial-gradient(circle at 86% 20%,rgba(120,148,111,.30),transparent 32%),
+    radial-gradient(circle at 50% 80%,rgba(0,0,0,.34),transparent 45%),
+    linear-gradient(180deg,rgba(12,15,11,.15),rgba(10,12,9,.72));
+  border-top:1px solid rgba(255,247,231,.14);
+  z-index:-1;
+}
+.reveal{
+  opacity:0;
+  transform:translateY(34px);
+  animation:riseIn .8s ease forwards;
+  animation-timeline:view();
+  animation-range:entry 10% cover 35%;
+}
+@keyframes riseIn{
+  to{opacity:1;transform:translateY(0)}
+}
+.reg-scale .scale-context{
+  font-family:"Manrope",system-ui,sans-serif;
+  color:rgba(242,234,216,.70);
+  line-height:1.6;
+  max-width:780px;
+  margin-top:10px;
+  font-size:14px;
+}
+
+
+.inscription-field{
+  position:absolute;
+  inset:0 calc(50% - 50vw);
+  pointer-events:none;
+  overflow:hidden;
+  z-index:-1;
+}
+.inscription{
+  position:absolute;
+  color:rgba(0,0,0,.34);
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-style:italic;
+  font-weight:600;
+  letter-spacing:-.035em;
+  line-height:.9;
+  white-space:nowrap;
+  filter:blur(.15px);
+  opacity:.42;
+  mask-image:linear-gradient(90deg,transparent 0%,black 18%,black 68%,transparent 100%);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,black 18%,black 68%,transparent 100%);
+}
+.inscription.one{font-size:88px;left:-120px;top:38px;transform:rotate(-7deg);animation:driftTextOne 16s ease-in-out infinite alternate}
+.inscription.two{font-size:64px;right:-220px;top:246px;transform:rotate(7deg);animation:driftTextTwo 18s ease-in-out infinite alternate}
+.inscription.three{font-size:74px;left:6%;bottom:148px;transform:rotate(-4deg);animation:driftTextThree 20s ease-in-out infinite alternate}
+.inscription.four{font-size:54px;right:7%;bottom:48px;transform:rotate(5deg);opacity:.30;animation:driftTextFour 22s ease-in-out infinite alternate}
+@keyframes driftTextOne{from{translate:0 0}to{translate:54px 20px}}
+@keyframes driftTextTwo{from{translate:0 0}to{translate:-70px 18px}}
+@keyframes driftTextThree{from{translate:0 0}to{translate:42px -18px}}
+@keyframes driftTextFour{from{translate:0 0}to{translate:-34px -16px}}
+.home-depth .reg-scale{
+  position:relative;
+  backdrop-filter:blur(10px);
+}
+.home-depth .statement{
+  position:relative;
+  margin-top:34px;
+  backdrop-filter:blur(10px);
+}
+.home-depth .reg-scale::before,
+.home-depth .statement::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  border-radius:inherit;
+  background:linear-gradient(120deg,rgba(255,247,231,.12),transparent 32%,rgba(120,148,111,.08) 66%,transparent);
+  pointer-events:none;
+}
+@supports (animation-timeline:view()){
+  .home-depth{
+    animation:depthTone linear both;
+    animation-timeline:view();
+    animation-range:entry 0% cover 58%;
+  }
+  @keyframes depthTone{
+    from{filter:saturate(.9) brightness(.88)}
+    to{filter:saturate(1.08) brightness(1)}
+  }
+}
+@media(max-width:820px){
+  .inscription.one{font-size:52px;left:-220px;top:55px}
+  .inscription.two{font-size:42px;right:-330px;top:320px}
+  .inscription.three{font-size:46px;left:-40px;bottom:210px}
+  .inscription.four{display:none}
+}
+
+
+.front-inscription-field{
+  position:absolute;
+  inset:0 calc(50% - 50vw);
+  overflow:hidden;
+  pointer-events:none;
+  z-index:-1;
+}
+.front-script{
+  position:absolute;
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-style:italic;
+  font-weight:600;
+  line-height:.92;
+  white-space:nowrap;
+  color:rgba(0,0,0,.34);
+  opacity:.58;
+  filter:blur(.12px);
+  mask-image:linear-gradient(90deg,transparent 0%,black 16%,black 72%,transparent 100%);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,black 16%,black 72%,transparent 100%);
+}
+.front-script.a{
+  font-size:clamp(54px,8vw,116px);
+  left:-9vw;
+  top:12vh;
+  transform:rotate(-6deg);
+  animation:frontDriftA 18s ease-in-out infinite alternate;
+}
+.front-script.b{
+  font-size:clamp(38px,5.8vw,86px);
+  right:-18vw;
+  top:37vh;
+  transform:rotate(5deg);
+  animation:frontDriftB 20s ease-in-out infinite alternate;
+}
+.front-script.c{
+  font-size:clamp(42px,6.2vw,92px);
+  left:2vw;
+  bottom:15vh;
+  transform:rotate(-3deg);
+  opacity:.42;
+  animation:frontDriftC 24s ease-in-out infinite alternate;
+}
+.front-script.d{
+  font-size:clamp(28px,4.5vw,64px);
+  right:4vw;
+  bottom:8vh;
+  transform:rotate(6deg);
+  opacity:.28;
+  animation:frontDriftD 26s ease-in-out infinite alternate;
+}
+@keyframes frontDriftA{from{translate:0 0}to{translate:66px 16px}}
+@keyframes frontDriftB{from{translate:0 0}to{translate:-86px 18px}}
+@keyframes frontDriftC{from{translate:0 0}to{translate:50px -16px}}
+@keyframes frontDriftD{from{translate:0 0}to{translate:-42px -12px}}
+.hero-card.minimal{
+  z-index:1;
+}
+.hero-card.minimal::before{
+  background:
+    linear-gradient(120deg,rgba(255,247,231,.08),transparent 30%,rgba(120,148,111,.055));
+}
+.statement-mark::after{
+  content:"Use powerful tools with human judgment.";
+}
+
+.front-script{
+  color:rgba(0,0,0,.46);
+  opacity:.70;
+  filter:blur(.08px);
+}
+.front-script.a{font-size:clamp(66px,9.8vw,142px);top:8vh}
+.front-script.b{font-size:clamp(46px,7.2vw,104px);top:34vh}
+.front-script.c{font-size:clamp(52px,7.8vw,112px);bottom:14vh}
+.hero-card.minimal{
+  background:
+    radial-gradient(circle at 68% 26%,rgba(120,148,111,.16),transparent 28%),
+    linear-gradient(135deg,rgba(255,247,231,.10),rgba(255,247,231,.025)),
+    rgba(15,18,14,.48);
+}
+.statement-mark::after{
+  content:"Guard privacy. Preserve judgment.";
+}
+
+
+.statement-mark::after{content:"Guard privacy. Preserve judgment.";}
+
+
+/* shared interaction language */
+a,button,.pill,.bubble,.footer-button,.source-list a,.drawer button,.country,.use-card{
+  -webkit-tap-highlight-color:transparent;
+}
+.pill,.bubble,.footer-button,.source-list a,.drawer button,.menu-btn,.country,.use-card,.card{
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease, opacity .18s ease;
+}
+.pill:hover,.source-list a:hover,.drawer button:hover,.footer-button:hover,.menu-btn:hover,.country:hover,.use-card:hover{
+  transform:translateY(-2px) scale(1.018);
+}
+.pill:active,.source-list a:active,.drawer button:active,.footer-button:active,.menu-btn:active,.bubble:active{
+  transform:translateY(1px) scale(.975);
+}
+
+.home-landing{
+  transform-origin:50% 0%;
+  perspective:1200px;
+}
+.hero-card.minimal{
+  transform-origin:50% 0%;
+  will-change:transform,opacity,filter;
+}
+@supports (animation-timeline:view()){
+  .hero-card.minimal{
+    animation:
+      openingFloat 6s ease-in-out infinite alternate,
+      foldAway linear both;
+    animation-timeline:auto, view();
+    animation-range:normal, exit 5% exit 82%;
+  }
+  @keyframes foldAway{
+    0%{transform:translateY(0) rotateX(0deg) scale(1);opacity:1;filter:blur(0)}
+    45%{transform:translateY(-16px) rotateX(13deg) scale(.985);opacity:.92;filter:blur(.2px)}
+    100%{transform:translateY(-72px) rotateX(52deg) scale(.88);opacity:.18;filter:blur(2px)}
+  }
+  .home-depth{
+    animation:foldIn linear both;
+    animation-timeline:view();
+    animation-range:entry 0% cover 34%;
+  }
+  @keyframes foldIn{
+    from{transform:translateY(60px) rotateX(-10deg);opacity:.35}
+    to{transform:translateY(0) rotateX(0deg);opacity:1}
+  }
+}
+.safely-footer{
+  position:relative;
+  width:min(1180px,100%);
+  margin:78px auto 0;
+  left:auto;
+  transform:none;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(120,148,111,.26),transparent 38%),
+    linear-gradient(180deg,#102818 0%,#07130c 100%);
+  border:1px solid rgba(255,247,231,.14);
+  border-radius:34px;
+  padding:54px clamp(22px,5vw,70px) 34px;
+  box-shadow:0 -8px 44px rgba(0,0,0,.22), 0 26px 70px rgba(0,0,0,.22);
+  overflow:hidden;
+}
+.safely-footer::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg,transparent,rgba(255,247,231,.035),transparent),
+    radial-gradient(circle at 12% 10%,rgba(229,194,141,.08),transparent 30%);
+  pointer-events:none;
+}
+.footer-inner{
+  width:100%;
+  margin:0 auto;
+  position:relative;
+  z-index:1;
+}
+.footer-top{
+  display:grid;
+  grid-template-columns:1fr;
+  text-align:center;
+  justify-items:center;
+  gap:16px;
+  padding-bottom:34px;
+  border-bottom:1px solid rgba(255,247,231,.12);
+}
+.footer-brand{
+  color:rgba(255,247,231,.70);
+  font-family:"Manrope",system-ui,sans-serif;
+  font-size:14px;
+  line-height:1.65;
+  max-width:760px;
+  text-align:center;
+}
+.footer-brand b{
+  display:block;
+  font-family:"Cormorant Garamond",Georgia,serif;
+  color:var(--cream);
+  font-size:40px;
+  letter-spacing:-.055em;
+  margin-bottom:4px;
+  font-weight:700;
+  text-align:center;
+}
+.footer-note-mini{
+  font-family:"Manrope",system-ui,sans-serif;
+  color:rgba(255,247,231,.52);
+  font-size:12px;
+  line-height:1.6;
+  text-align:center;
+  max-width:650px;
+}
+.footer-links{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:22px;
+  flex-wrap:wrap;
+  padding-top:22px;
+}
+.footer-button{
+  border:0;
+  background:transparent;
+  color:rgba(255,247,231,.78);
+  text-decoration:none;
+  font-family:"Manrope",system-ui,sans-serif;
+  font-size:13px;
+  letter-spacing:.02em;
+  padding:8px 0;
+  border-radius:0;
+  position:relative;
+  box-shadow:none;
+  text-align:center;
+}
+.footer-button::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:3px;
+  height:1px;
+  background:rgba(229,194,141,.62);
+  transform:scaleX(.18);
+  transform-origin:center;
+  opacity:.45;
+  transition:transform .18s ease, opacity .18s ease;
+}
+.footer-button:hover{
+  color:var(--cream);
+  transform:translateY(-1px) scale(1.025);
+}
+.footer-button:hover::after{
+  transform:scaleX(1);
+  opacity:1;
+}
+.footer-button:active{
+  transform:translateY(1px) scale(.97);
+}
+@media(max-width:760px){
+  .safely-footer{border-radius:28px;padding:42px 22px 30px}
+  .footer-links{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}
+}
+
+/* v9 visual integration: remove bright white panels */
+.card{
+  background:
+    linear-gradient(145deg,rgba(255,247,231,.075),rgba(120,148,111,.06)),
+    rgba(12,25,16,.64);
+  color:var(--cream);
+  border-color:rgba(255,247,231,.16);
+  box-shadow:0 18px 48px rgba(0,0,0,.20);
+  backdrop-filter:blur(12px);
+}
+.card h3{color:var(--cream)}
+.card p,.card li{color:rgba(242,234,216,.74)}
+.card.dark{
+  background:
+    linear-gradient(145deg,rgba(255,247,231,.08),rgba(120,148,111,.055)),
+    rgba(10,22,14,.68);
+}
+.source-list a{
+  background:rgba(255,247,231,.075);
+  color:#e5c28d;
+  border-color:rgba(255,247,231,.17);
+  backdrop-filter:blur(8px);
+}
+.source-list a:hover{
+  background:rgba(255,247,231,.12);
+  border-color:rgba(229,194,141,.38);
+}
+.model-table td{
+  background:
+    linear-gradient(145deg,rgba(255,247,231,.09),rgba(120,148,111,.055)),
+    rgba(10,22,14,.72);
+  color:var(--cream);
+  border-color:rgba(255,247,231,.13);
+}
+.model-table td:first-child,
+.model-table td:last-child{
+  border-color:rgba(255,247,231,.13);
+}
+.model-meta,
+.model-table td,
+.model-table td p{
+  color:rgba(242,234,216,.74);
+}
+.bubble-detail,
+.bubble-detail.nested{
+  background:
+    linear-gradient(145deg,rgba(255,247,231,.13),rgba(120,148,111,.08)),
+    rgba(11,24,15,.88);
+  color:var(--cream);
+  border-color:rgba(255,247,231,.20);
+  backdrop-filter:blur(14px);
+}
+.bubble-detail h3,
+.bubble-detail.nested h3{color:var(--cream)}
+.bubble-detail p,
+.bubble-detail.nested p{color:rgba(242,234,216,.74)}
+.notice{
+  background:rgba(255,247,231,.07);
+  border-color:#d9c89f;
+  color:rgba(242,234,216,.78);
+}
+
+/* Rework the Guard Privacy / Preserve Judgment mark */
+.statement-mark{
+  min-height:300px;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  display:grid;
+  place-items:center;
+  overflow:visible;
+  position:relative;
+}
+.statement-mark::before{
+  content:"";
+  position:absolute;
+  width:min(330px,76%);
+  height:min(330px,76%);
+  border-radius:50%;
+  background:
+    radial-gradient(circle,rgba(120,148,111,.20),rgba(185,130,79,.08) 48%,transparent 70%);
+  filter:blur(.2px);
+}
+.statement-mark::after{
+  position:relative;
+  left:auto;
+  right:auto;
+  bottom:auto;
+  content:"Guard privacy. Preserve judgment.";
+  max-width:440px;
+  text-align:center;
+  font-size:clamp(38px,5vw,76px);
+  line-height:.88;
+  letter-spacing:-.06em;
+  color:rgba(255,247,231,.86);
+  text-shadow:0 20px 44px rgba(0,0,0,.30);
+}
+.statement-mark .empty{display:none}
+
+/* Footer centering and symmetry */
+.safely-footer{
+  transform:translateX(-50%);
+}
+.footer-top{
+  grid-template-columns:1fr;
+  text-align:center;
+  justify-items:center;
+  gap:16px;
+}
+.footer-brand{
+  max-width:760px;
+  text-align:center;
+}
+.footer-note-mini{
+  text-align:center;
+  max-width:620px;
+}
+.footer-links{
+  justify-content:center;
+  gap:24px;
+}
+.footer-button{
+  text-align:center;
+}
+
+/* Keep full-page backgrounds dark during bounce/overscroll */
+html,body{
+  background:#102015;
+}
+
+@media(max-width:900px){
+  .model-hero,.use-grid{grid-template-columns:1fr}
+  .model-table{font-size:13px}
+  .model-table th:nth-child(4),.model-table td:nth-child(4){display:none}
+}
+
+
+.home-landing{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:56px 0;
+  position:relative;
+  isolation:isolate;
+}
+.home-landing .hero-card{
+  animation:openingFloat 6s ease-in-out infinite alternate;
+}
+@keyframes openingFloat{
+  from{transform:translateY(0) scale(1)}
+  to{transform:translateY(-10px) scale(1.012)}
+}
+.home-landing::after{
+  content:"";
+  position:absolute;
+  bottom:30px;
+  left:50%;
+  width:1px;
+  height:78px;
+  transform:translateX(-50%);
+  background:linear-gradient(to bottom,rgba(242,234,216,0),rgba(242,234,216,.72),rgba(242,234,216,0));
+  animation:breathingLine 2.6s ease-in-out infinite;
+}
+.home-landing::before{
+  content:"";
+  position:absolute;
+  bottom:44px;
+  left:50%;
+  width:12px;
+  height:12px;
+  border-right:1px solid rgba(242,234,216,.68);
+  border-bottom:1px solid rgba(242,234,216,.68);
+  transform:translateX(-50%) rotate(45deg);
+  animation:quietArrow 2.6s ease-in-out infinite;
+}
+@keyframes breathingLine{
+  0%,100%{opacity:.32;transform:translateX(-50%) scaleY(.62)}
+  50%{opacity:.95;transform:translateX(-50%) scaleY(1)}
+}
+@keyframes quietArrow{
+  0%,100%{opacity:.25;bottom:52px}
+  50%{opacity:.9;bottom:36px}
+}
+.hero-card.minimal{
+  width:min(980px,100%);
+  min-height:62vh;
+  display:grid;
+  align-content:center;
+  background:
+    radial-gradient(circle at 72% 30%,rgba(120,148,111,.23),transparent 30%),
+    linear-gradient(135deg,rgba(255,247,231,.13),rgba(255,247,231,.035)),
+    rgba(15,18,14,.54);
+}
+.home-depth{
+  min-height:100vh;
+  padding:90px 0 70px;
+  position:relative;
+}
+.home-depth::before{
+  content:"";
+  position:absolute;
+  inset:0 calc(50% - 50vw);
+  background:
+    radial-gradient(circle at 12% 18%,rgba(185,130,79,.16),transparent 28%),
+    radial-gradient(circle at 86% 20%,rgba(120,148,111,.30),transparent 32%),
+    radial-gradient(circle at 50% 80%,rgba(0,0,0,.34),transparent 45%),
+    linear-gradient(180deg,rgba(12,15,11,.15),rgba(10,12,9,.72));
+  border-top:1px solid rgba(255,247,231,.14);
+  z-index:-1;
+}
+.reveal{
+  opacity:0;
+  transform:translateY(34px);
+  animation:riseIn .8s ease forwards;
+  animation-timeline:view();
+  animation-range:entry 10% cover 35%;
+}
+@keyframes riseIn{
+  to{opacity:1;transform:translateY(0)}
+}
+.reg-scale .scale-context{
+  font-family:"Manrope",system-ui,sans-serif;
+  color:rgba(242,234,216,.70);
+  line-height:1.6;
+  max-width:780px;
+  margin-top:10px;
+  font-size:14px;
+}
+
+
+.inscription-field{
+  position:absolute;
+  inset:0 calc(50% - 50vw);
+  pointer-events:none;
+  overflow:hidden;
+  z-index:-1;
+}
+.inscription{
+  position:absolute;
+  color:rgba(0,0,0,.34);
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-style:italic;
+  font-weight:600;
+  letter-spacing:-.035em;
+  line-height:.9;
+  white-space:nowrap;
+  filter:blur(.15px);
+  opacity:.42;
+  mask-image:linear-gradient(90deg,transparent 0%,black 18%,black 68%,transparent 100%);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,black 18%,black 68%,transparent 100%);
+}
+.inscription.one{font-size:88px;left:-120px;top:38px;transform:rotate(-7deg);animation:driftTextOne 16s ease-in-out infinite alternate}
+.inscription.two{font-size:64px;right:-220px;top:246px;transform:rotate(7deg);animation:driftTextTwo 18s ease-in-out infinite alternate}
+.inscription.three{font-size:74px;left:6%;bottom:148px;transform:rotate(-4deg);animation:driftTextThree 20s ease-in-out infinite alternate}
+.inscription.four{font-size:54px;right:7%;bottom:48px;transform:rotate(5deg);opacity:.30;animation:driftTextFour 22s ease-in-out infinite alternate}
+@keyframes driftTextOne{from{translate:0 0}to{translate:54px 20px}}
+@keyframes driftTextTwo{from{translate:0 0}to{translate:-70px 18px}}
+@keyframes driftTextThree{from{translate:0 0}to{translate:42px -18px}}
+@keyframes driftTextFour{from{translate:0 0}to{translate:-34px -16px}}
+.home-depth .reg-scale{
+  position:relative;
+  backdrop-filter:blur(10px);
+}
+.home-depth .statement{
+  position:relative;
+  margin-top:34px;
+  backdrop-filter:blur(10px);
+}
+.home-depth .reg-scale::before,
+.home-depth .statement::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  border-radius:inherit;
+  background:linear-gradient(120deg,rgba(255,247,231,.12),transparent 32%,rgba(120,148,111,.08) 66%,transparent);
+  pointer-events:none;
+}
+@supports (animation-timeline:view()){
+  .home-depth{
+    animation:depthTone linear both;
+    animation-timeline:view();
+    animation-range:entry 0% cover 58%;
+  }
+  @keyframes depthTone{
+    from{filter:saturate(.9) brightness(.88)}
+    to{filter:saturate(1.08) brightness(1)}
+  }
+}
+@media(max-width:820px){
+  .inscription.one{font-size:52px;left:-220px;top:55px}
+  .inscription.two{font-size:42px;right:-330px;top:320px}
+  .inscription.three{font-size:46px;left:-40px;bottom:210px}
+  .inscription.four{display:none}
+}
+
+
+.front-inscription-field{
+  position:absolute;
+  inset:0 calc(50% - 50vw);
+  overflow:hidden;
+  pointer-events:none;
+  z-index:-1;
+}
+.front-script{
+  position:absolute;
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-style:italic;
+  font-weight:600;
+  line-height:.92;
+  white-space:nowrap;
+  color:rgba(0,0,0,.34);
+  opacity:.58;
+  filter:blur(.12px);
+  mask-image:linear-gradient(90deg,transparent 0%,black 16%,black 72%,transparent 100%);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,black 16%,black 72%,transparent 100%);
+}
+.front-script.a{
+  font-size:clamp(54px,8vw,116px);
+  left:-9vw;
+  top:12vh;
+  transform:rotate(-6deg);
+  animation:frontDriftA 18s ease-in-out infinite alternate;
+}
+.front-script.b{
+  font-size:clamp(38px,5.8vw,86px);
+  right:-18vw;
+  top:37vh;
+  transform:rotate(5deg);
+  animation:frontDriftB 20s ease-in-out infinite alternate;
+}
+.front-script.c{
+  font-size:clamp(42px,6.2vw,92px);
+  left:2vw;
+  bottom:15vh;
+  transform:rotate(-3deg);
+  opacity:.42;
+  animation:frontDriftC 24s ease-in-out infinite alternate;
+}
+.front-script.d{
+  font-size:clamp(28px,4.5vw,64px);
+  right:4vw;
+  bottom:8vh;
+  transform:rotate(6deg);
+  opacity:.28;
+  animation:frontDriftD 26s ease-in-out infinite alternate;
+}
+@keyframes frontDriftA{from{translate:0 0}to{translate:66px 16px}}
+@keyframes frontDriftB{from{translate:0 0}to{translate:-86px 18px}}
+@keyframes frontDriftC{from{translate:0 0}to{translate:50px -16px}}
+@keyframes frontDriftD{from{translate:0 0}to{translate:-42px -12px}}
+.hero-card.minimal{
+  z-index:1;
+}
+.hero-card.minimal::before{
+  background:
+    linear-gradient(120deg,rgba(255,247,231,.08),transparent 30%,rgba(120,148,111,.055));
+}
+.statement-mark::after{
+  content:"Use powerful tools with human judgment.";
+}
+
+.front-script{
+  color:rgba(0,0,0,.46);
+  opacity:.70;
+  filter:blur(.08px);
+}
+.front-script.a{font-size:clamp(66px,9.8vw,142px);top:8vh}
+.front-script.b{font-size:clamp(46px,7.2vw,104px);top:34vh}
+.front-script.c{font-size:clamp(52px,7.8vw,112px);bottom:14vh}
+.hero-card.minimal{
+  background:
+    radial-gradient(circle at 68% 26%,rgba(120,148,111,.16),transparent 28%),
+    linear-gradient(135deg,rgba(255,247,231,.10),rgba(255,247,231,.025)),
+    rgba(15,18,14,.48);
+}
+.statement-mark::after{
+  content:"Guard privacy. Preserve judgment.";
+}
+
+
+.statement-mark::after{content:"Guard privacy. Preserve judgment.";}
+
+
+/* shared interaction language */
+a,button,.pill,.bubble,.footer-button,.source-list a,.drawer button,.country,.use-card{
+  -webkit-tap-highlight-color:transparent;
+}
+.pill,.bubble,.footer-button,.source-list a,.drawer button,.menu-btn,.country,.use-card,.card{
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease, opacity .18s ease;
+}
+.pill:hover,.source-list a:hover,.drawer button:hover,.footer-button:hover,.menu-btn:hover,.country:hover,.use-card:hover{
+  transform:translateY(-2px) scale(1.018);
+}
+.pill:active,.source-list a:active,.drawer button:active,.footer-button:active,.menu-btn:active,.bubble:active{
+  transform:translateY(1px) scale(.975);
+}
+
+.home-landing{
+  transform-origin:50% 0%;
+  perspective:1200px;
+}
+.hero-card.minimal{
+  transform-origin:50% 0%;
+  will-change:transform,opacity,filter;
+}
+@supports (animation-timeline:view()){
+  .hero-card.minimal{
+    animation:
+      openingFloat 6s ease-in-out infinite alternate,
+      foldAway linear both;
+    animation-timeline:auto, view();
+    animation-range:normal, exit 5% exit 82%;
+  }
+  @keyframes foldAway{
+    0%{transform:translateY(0) rotateX(0deg) scale(1);opacity:1;filter:blur(0)}
+    45%{transform:translateY(-16px) rotateX(13deg) scale(.985);opacity:.92;filter:blur(.2px)}
+    100%{transform:translateY(-72px) rotateX(52deg) scale(.88);opacity:.18;filter:blur(2px)}
+  }
+  .home-depth{
+    animation:foldIn linear both;
+    animation-timeline:view();
+    animation-range:entry 0% cover 34%;
+  }
+  @keyframes foldIn{
+    from{transform:translateY(60px) rotateX(-10deg);opacity:.35}
+    to{transform:translateY(0) rotateX(0deg);opacity:1}
+  }
+}
+.safely-footer{
+  position:relative;
+  left:50%;
+  width:100vw;
+  transform:translateX(-50%);
+  margin-top:58px;
+  background:
+    radial-gradient(circle at 20% 0%,rgba(120,148,111,.28),transparent 34%),
+    linear-gradient(135deg,#0b1b12,#12321f 55%,#08130d);
+  border-top:1px solid rgba(255,247,231,.16);
+  border-bottom:1px solid rgba(255,247,231,.10);
+  padding:28px min(6vw,72px);
+  box-shadow:0 -18px 48px rgba(0,0,0,.22);
+}
+.footer-inner{
+  width:min(1180px,100%);
+  margin:0 auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:18px;
+  flex-wrap:wrap;
+}
+.footer-brand{
+  color:rgba(255,247,231,.78);
+  font-family:"Manrope",system-ui,sans-serif;
+  font-size:13px;
+  line-height:1.55;
+}
+.footer-brand b{
+  display:block;
+  font-family:"Cormorant Garamond",Georgia,serif;
+  color:var(--cream);
+  font-size:26px;
+  letter-spacing:-.04em;
+  margin-bottom:2px;
+}
+.footer-links{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.footer-button{
+  border:1px solid rgba(255,247,231,.22);
+  background:rgba(255,247,231,.09);
+  color:var(--cream);
+  text-decoration:none;
+  border-radius:999px;
+  padding:11px 16px;
+  font-family:"Manrope",system-ui,sans-serif;
+  font-size:13px;
+  backdrop-filter:blur(12px);
+  box-shadow:0 10px 24px rgba(0,0,0,.15);
+}
+.footer-button:hover{
+  background:rgba(255,247,231,.15);
+  border-color:rgba(255,247,231,.38);
+}
+@media(max-width:760px){
+  .footer-inner{align-items:flex-start}
+  .footer-links{width:100%}
+  .footer-button{flex:1;text-align:center}
+}
+
+.bubble-board{
+  min-height:720px;
+  perspective:1200px;
+}
+.bubble-stage{
+  position:relative;
+  min-height:650px;
+}
+.bubble-level{
+  position:absolute;
+  inset:0;
+  transition:transform .72s cubic-bezier(.2,.78,.2,1), opacity .52s ease, filter .52s ease;
+  transform-origin:center;
+}
+.bubble-level.base{
+  z-index:1;
+}
+.bubble-level.detail{
+  z-index:3;
+  opacity:0;
+  pointer-events:none;
+  transform:scale(.72) translateY(34px);
+}
+.bubble-board.zoomed .bubble-level.base{
+  transform:scale(1.82) translateX(-7%) translateY(-4%);
+  opacity:.30;
+  filter:blur(1.2px) saturate(.75);
+  pointer-events:none;
+}
+.bubble-board.zoomed .bubble-level.detail.active{
+  opacity:1;
+  pointer-events:auto;
+  transform:scale(1) translateY(0);
+}
+.zoom-back{
+  position:absolute;
+  top:8px;
+  left:8px;
+  z-index:8;
+  border:1px solid var(--line);
+  background:rgba(255,247,231,.12);
+  color:var(--cream);
+  border-radius:999px;
+  padding:9px 13px;
+  font-family:"Manrope",system-ui,sans-serif;
+  font-size:12px;
+  cursor:pointer;
+  backdrop-filter:blur(10px);
+  display:none;
+}
+.bubble-board.zoomed .zoom-back{display:inline-block}
+.bubble.sub{
+  background:radial-gradient(circle at 35% 30%,rgba(255,247,231,.32),rgba(185,130,79,.18) 43%,rgba(20,23,18,.72) 100%);
+}
+.bubble.locked-edge{
+  opacity:.28;
+}
+.bubble-detail.nested{
+  z-index:6;
+}
+@media(max-width:820px){
+  .bubble-stage,.bubble-board{min-height:auto}
+  .bubble-level{position:relative}
+  .bubble-level.detail{display:none;position:relative;opacity:1;transform:none}
+  .bubble-board.zoomed .bubble-level.detail.active{display:block}
+  .bubble-board.zoomed .bubble-level.base{display:none}
+  .zoom-back{position:relative;display:none;margin-bottom:14px;top:auto;left:auto}
+  .bubble-board.zoomed .zoom-back{display:inline-block}
+}
+
+
+/* v9 visual integration: remove bright white panels */
+.card{
+  background:
+    linear-gradient(145deg,rgba(255,247,231,.075),rgba(120,148,111,.06)),
+    rgba(12,25,16,.64);
+  color:var(--cream);
+  border-color:rgba(255,247,231,.16);
+  box-shadow:0 18px 48px rgba(0,0,0,.20);
+  backdrop-filter:blur(12px);
+}
+.card h3{color:var(--cream)}
+.card p,.card li{color:rgba(242,234,216,.74)}
+.card.dark{
+  background:
+    linear-gradient(145deg,rgba(255,247,231,.08),rgba(120,148,111,.055)),
+    rgba(10,22,14,.68);
+}
+.source-list a{
+  background:rgba(255,247,231,.075);
+  color:#e5c28d;
+  border-color:rgba(255,247,231,.17);
+  backdrop-filter:blur(8px);
+}
+.source-list a:hover{
+  background:rgba(255,247,231,.12);
+  border-color:rgba(229,194,141,.38);
+}
+.model-table td{
+  background:
+    linear-gradient(145deg,rgba(255,247,231,.09),rgba(120,148,111,.055)),
+    rgba(10,22,14,.72);
+  color:var(--cream);
+  border-color:rgba(255,247,231,.13);
+}
+.model-table td:first-child,
+.model-table td:last-child{
+  border-color:rgba(255,247,231,.13);
+}
+.model-meta,
+.model-table td,
+.model-table td p{
+  color:rgba(242,234,216,.74);
+}
+.bubble-detail,
+.bubble-detail.nested{
+  background:
+    linear-gradient(145deg,rgba(255,247,231,.13),rgba(120,148,111,.08)),
+    rgba(11,24,15,.88);
+  color:var(--cream);
+  border-color:rgba(255,247,231,.20);
+  backdrop-filter:blur(14px);
+}
+.bubble-detail h3,
+.bubble-detail.nested h3{color:var(--cream)}
+.bubble-detail p,
+.bubble-detail.nested p{color:rgba(242,234,216,.74)}
+.notice{
+  background:rgba(255,247,231,.07);
+  border-color:#d9c89f;
+  color:rgba(242,234,216,.78);
+}
+
+/* Rework the Guard Privacy / Preserve Judgment mark */
+.statement-mark{
+  min-height:300px;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  display:grid;
+  place-items:center;
+  overflow:visible;
+  position:relative;
+}
+.statement-mark::before{
+  content:"";
+  position:absolute;
+  width:min(330px,76%);
+  height:min(330px,76%);
+  border-radius:50%;
+  background:
+    radial-gradient(circle,rgba(120,148,111,.20),rgba(185,130,79,.08) 48%,transparent 70%);
+  filter:blur(.2px);
+}
+.statement-mark::after{
+  position:relative;
+  left:auto;
+  right:auto;
+  bottom:auto;
+  content:"Guard privacy. Preserve judgment.";
+  max-width:440px;
+  text-align:center;
+  font-size:clamp(38px,5vw,76px);
+  line-height:.88;
+  letter-spacing:-.06em;
+  color:rgba(255,247,231,.86);
+  text-shadow:0 20px 44px rgba(0,0,0,.30);
+}
+.statement-mark .empty{display:none}
+
+/* Footer centering and symmetry */
+.safely-footer{
+  transform:translateX(-50%);
+}
+.footer-top{
+  grid-template-columns:1fr;
+  text-align:center;
+  justify-items:center;
+  gap:16px;
+}
+.footer-brand{
+  max-width:760px;
+  text-align:center;
+}
+.footer-note-mini{
+  text-align:center;
+  max-width:620px;
+}
+.footer-links{
+  justify-content:center;
+  gap:24px;
+}
+.footer-button{
+  text-align:center;
+}
+
+/* Keep full-page backgrounds dark during bounce/overscroll */
+html,body{
+  background:#102015;
+}
+
+@media(max-width:900px){
+  .statement{grid-template-columns:1fr}
+  .comparison-grid{grid-template-columns:1fr}
+}
+@media(max-width:820px){
+  .hero-card{padding:34px 24px;border-radius:30px}
+  .card,.card.wide{grid-column:1/-1}
+  .scale-line{margin-left:6px;margin-right:6px}
+  .scale-item b{font-size:12px}
+  .bubble-board{min-height:860px}
+  .bubble{position:relative!important;left:auto!important;top:auto!important;width:100%!important;height:auto!important;min-height:120px;margin-bottom:14px;border-radius:24px}
+  .bubble-detail{position:relative;left:auto;right:auto;bottom:auto;margin-top:10px}
+}
+
+/* final v9 specificity pass */
+.card.full,.card.wide,.card.dark,.card{background:linear-gradient(145deg,rgba(255,247,231,.075),rgba(120,148,111,.055)),rgba(10,22,14,.68)!important;color:var(--cream)!important}
+.source-list a,.model-table td{background:rgba(12,25,16,.72)!important;color:rgba(242,234,216,.82)!important}
+.source-list a{color:#e5c28d!important}
+.bubble-detail{background:linear-gradient(145deg,rgba(255,247,231,.12),rgba(120,148,111,.08)),rgba(10,22,14,.90)!important}
+
+
+/* v10 centered footer pass */
+.safely-footer{
+  left:auto!important;
+  right:auto!important;
+  transform:none!important;
+  width:min(1180px,100%)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+.footer-inner,.footer-top,.footer-brand,.footer-note-mini{
+  text-align:center!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+.footer-links{justify-content:center!important}
+
+
+/* v11 footer-only links */
+.safely-footer{margin-top:28px!important}
+.safely-footer .footer-links{
+  justify-content:center!important;
+  gap:38px!important;
+}
+.safely-footer .footer-button{
+  min-width:86px;
+}
+
+
+/* v13 posture scale readability */
+.reg-scale{
+  overflow:visible;
+}
+.reg-scale .scale-line{
+  height:12px;
+  margin:86px 22px 34px;
+  overflow:visible;
+}
+.reg-scale .scale-item{
+  top:-66px;
+  transform:translateX(-50%);
+  min-width:150px;
+  pointer-events:none;
+}
+.reg-scale .scale-dot{
+  position:absolute;
+  left:50%;
+  top:60px;
+  transform:translateX(-50%);
+  z-index:3;
+  width:24px;
+  height:24px;
+  margin:0;
+  background:#f2ead8;
+  border:3px solid #11180f;
+  box-shadow:0 0 0 4px rgba(242,234,216,.16), 0 8px 18px rgba(0,0,0,.28);
+}
+.reg-scale .scale-item b{
+  display:block;
+  font-size:15px;
+  color:var(--cream);
+  text-shadow:0 2px 12px rgba(0,0,0,.38);
+  margin-bottom:3px;
+}
+.reg-scale .scale-item span{
+  display:block;
+  font-size:12px;
+  color:rgba(242,234,216,.72);
+  text-shadow:0 2px 10px rgba(0,0,0,.35);
+}
+@media(max-width:720px){
+  .reg-scale .scale-line{margin:98px 10px 38px}
+  .reg-scale .scale-item{min-width:110px;top:-72px}
+  .reg-scale .scale-dot{top:66px}
+  .reg-scale .scale-item b{font-size:12px}
+  .reg-scale .scale-item span{font-size:10px}
+}
+
+
+/* v15 global jurisdiction playbooks */
+.ai-race-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:14px;
+  margin-top:22px;
+}
+.race-card{
+  min-height:260px;
+  border:1px solid var(--line);
+  border-radius:26px;
+  background:
+    radial-gradient(circle at 30% 0%,rgba(120,148,111,.20),transparent 34%),
+    linear-gradient(145deg,rgba(255,247,231,.085),rgba(120,148,111,.045)),
+    rgba(10,22,14,.70);
+  padding:20px;
+  color:var(--cream);
+  cursor:pointer;
+  box-shadow:0 14px 38px rgba(0,0,0,.18);
+  transition:transform .18s ease, border-color .18s ease, background .18s ease;
+}
+.race-card:hover{
+  transform:translateY(-4px) scale(1.018);
+  border-color:rgba(229,194,141,.42);
+  background:
+    radial-gradient(circle at 30% 0%,rgba(120,148,111,.28),transparent 38%),
+    linear-gradient(145deg,rgba(255,247,231,.12),rgba(120,148,111,.06)),
+    rgba(10,22,14,.76);
+}
+.race-rank{
+  font-family:"Manrope",system-ui,sans-serif;
+  color:#e5c28d;
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:14px;
+}
+.race-card h3{
+  font-size:28px;
+  letter-spacing:-.04em;
+  margin-bottom:8px;
+  color:var(--cream);
+}
+.race-card p{
+  font-family:"Manrope",system-ui,sans-serif;
+  color:rgba(242,234,216,.72);
+  font-size:13px;
+  line-height:1.55;
+}
+.race-card .race-pill{
+  display:inline-block;
+  margin-top:16px;
+  border:1px solid rgba(255,247,231,.18);
+  border-radius:999px;
+  padding:7px 10px;
+  color:#e5c28d;
+  font-family:"Manrope",system-ui,sans-serif;
+  font-size:11px;
+}
+.country-playbook{
+  display:grid;
+  grid-template-columns:.95fr 1.05fr;
+  gap:18px;
+  margin-top:24px;
+}
+.country-brief,.country-checklist,.country-sources{
+  border:1px solid var(--line);
+  border-radius:30px;
+  background:
+    linear-gradient(145deg,rgba(255,247,231,.085),rgba(120,148,111,.045)),
+    rgba(10,22,14,.70);
+  box-shadow:0 18px 48px rgba(0,0,0,.20);
+  padding:26px;
+  color:var(--cream);
+}
+.country-brief h3,.country-checklist h3,.country-sources h3{
+  font-size:30px;
+  letter-spacing:-.04em;
+  margin-bottom:10px;
+  color:var(--cream);
+}
+.country-brief p,.country-checklist li,.country-sources p{
+  font-family:"Manrope",system-ui,sans-serif;
+  color:rgba(242,234,216,.73);
+  font-size:14px;
+  line-height:1.65;
+}
+.country-checklist ul{
+  padding-left:18px;
+  display:grid;
+  gap:10px;
+}
+.country-sources{
+  margin-top:18px;
+}
+.country-source-list{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin-top:14px;
+}
+.country-source-list a{
+  display:block;
+  border:1px solid rgba(255,247,231,.16);
+  border-radius:18px;
+  background:rgba(255,247,231,.075);
+  color:#e5c28d;
+  padding:13px 14px;
+  text-decoration:none;
+  font-family:"Manrope",system-ui,sans-serif;
+  font-size:13px;
+  line-height:1.4;
+  transition:transform .18s ease, border-color .18s ease, background .18s ease;
+}
+.country-source-list a:hover{
+  transform:translateY(-2px) scale(1.012);
+  border-color:rgba(229,194,141,.42);
+  background:rgba(255,247,231,.12);
+}
+.jurisdiction-back{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:22px;
+  border:1px solid rgba(255,247,231,.18);
+  border-radius:999px;
+  background:rgba(255,247,231,.08);
+  color:var(--cream);
+  padding:10px 14px;
+  font-family:"Manrope",system-ui,sans-serif;
+  font-size:13px;
+  cursor:pointer;
+}
+.jurisdiction-back:hover{transform:translateY(-2px) scale(1.018)}
+.country-meta-row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin:16px 0 4px;
+}
+.country-meta{
+  border:1px solid rgba(255,247,231,.16);
+  background:rgba(255,247,231,.07);
+  color:#e5c28d;
+  border-radius:999px;
+  padding:7px 10px;
+  font-family:"Manrope",system-ui,sans-serif;
+  font-size:12px;
+}
+@media(max-width:1100px){
+  .ai-race-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:820px){
+  .ai-race-grid,.country-playbook,.country-source-list{grid-template-columns:1fr}
+}
+
+
+/* v16 Argentina + Global page cleanup */
+.ai-race-grid{
+  grid-template-columns:repeat(3,1fr)!important;
+}
+#global .comparison-grid{
+  grid-template-columns:repeat(4,1fr);
+}
+@media(max-width:1100px){
+  .ai-race-grid,#global .comparison-grid{grid-template-columns:repeat(2,1fr)!important}
+}
+@media(max-width:820px){
+  .ai-race-grid,#global .comparison-grid{grid-template-columns:1fr!important}
+}
+
+
+/* v20 cleanup empty source boxes */
+#us .grid:empty,
+#models .grid:empty,
+#us .card.full:empty,
+#models .card.full:empty,
+#us .source-list:empty,
+#models .source-list:empty{
+  display:none!important;
+}
+
+
+/* v23: force-remove top source boxes from US and Frontier Models only */
+#us .bottom-source-box,
+#models .bottom-source-box,
+#us .source-list,
+#models .source-list{
+  display:none!important;
+}
+
+</style>
+</head>
+<body>
+<div class="vines" aria-hidden="true">
+  <svg viewBox="0 0 1400 900" preserveAspectRatio="none">
+    <path d="M1220 -80 C1080 120 1290 260 1115 420 C980 545 1010 715 820 940" fill="none" stroke="rgba(242,234,216,.12)" stroke-width="2"/>
+    <path d="M180 -60 C315 145 120 285 285 470 C430 630 340 760 570 960" fill="none" stroke="rgba(242,234,216,.10)" stroke-width="2"/>
+    <path d="M1110 160 C1148 150 1170 126 1192 96 C1184 137 1165 162 1110 160Z" fill="rgba(190,202,167,.16)"/>
+    <path d="M1032 520 C1077 512 1103 484 1128 448 C1118 497 1092 525 1032 520Z" fill="rgba(190,202,167,.13)"/>
+    <path d="M278 204 C235 194 210 164 188 128 C196 176 221 204 278 204Z" fill="rgba(190,202,167,.14)"/>
+    <path d="M382 610 C336 601 310 574 286 538 C296 586 321 614 382 610Z" fill="rgba(190,202,167,.13)"/>
+  </svg>
+</div>
+
+<button class="menu-btn" onclick="SafelyAI.toggleMenu()" aria-label="Open navigation"><span></span></button>
+<aside class="drawer" id="drawer" aria-label="Main navigation">
+  <h2>SafelyAI</h2>
+  <p>A calmer map of AI governance: what rules exist, what is changing, and how to stay safe while using powerful probabilistic systems.</p>
+  <button class="active" onclick="SafelyAI.show('home', this)">Home<small>Purpose, privacy, and regulatory posture</small></button>
+  <button onclick="SafelyAI.show('global', this)">Global Comparison<small>Top AI jurisdictions + Argentina focus</small></button>
+  <button onclick="SafelyAI.show('eu', this)">EU AI Act<small>Risk-based compliance map</small></button>
+  <button onclick="SafelyAI.show('us', this)">US Regulation<small>Federal orders, states, model security</small></button>
+  <button onclick="SafelyAI.show('models', this)">Frontier Models<small>Leaderboard, strengths, safe use cases</small></button>
+</aside>
+<div class="scrim" id="scrim" onclick="SafelyAI.toggleMenu(false)"></div>
+
+<main class="shell">
+  <section id="home" class="page active">
+    <div class="home-landing">
+      <div class="front-inscription-field" aria-hidden="true">
+        <div class="front-script a">human oversight shall remain meaningful</div>
+        <div class="front-script b">systems must be transparent, secure, and accountable</div>
+        <div class="front-script c">privacy · safety · dignity · fundamental rights</div>
+        <div class="front-script d">do not confuse fluency with truth</div>
+      </div>
+      <div class="hero-card minimal">
+        <div class="kicker">AI Governance Field Guide</div>
+        <h1>Safely<span class="ai-mark">AI</span></h1>
+      </div>
+    </div>
+
+    <div class="home-depth">
+      <div class="inscription-field" aria-hidden="true">
+        <div class="inscription one">transparency obligations · human oversight · risk management</div>
+        <div class="inscription two">technical documentation · cybersecurity · accountability</div>
+        <div class="inscription three">AI literacy · privacy · fundamental rights · data governance</div>
+        <div class="inscription four">privacy · judgment · accountability</div>
+      </div>
+      <section class="reg-scale reveal">
+        <div class="kicker">Regulatory posture scale</div>
+        <h2 style="font-size:34px;letter-spacing:-.04em;font-weight:500;color:var(--cream)">National AI governance approaches</h2>
+        <p class="scale-context">This scale compares how each system tends to govern AI: from innovation-led policy with fewer AI-specific obligations, to fragmented federal/state oversight, to a formal risk-based legal framework.</p>
+        <div class="scale-line">
+          <div class="scale-item" style="left:12%"><div class="scale-dot"></div><b>Argentina</b><span>innovation-led</span></div>
+          <div class="scale-item" style="left:47%"><div class="scale-dot"></div><b>United States</b><span>fragmented oversight</span></div>
+          <div class="scale-item" style="left:86%"><div class="scale-dot"></div><b>European Union</b><span>risk-based framework</span></div>
+        </div>
+        <div class="scale-labels"><span>Flexible policy environment</span><span>Formal compliance architecture</span></div>
+      </section>
+
+      <section class="statement reveal">
+        <div>
+          <div class="kicker">Purpose</div>
+          <h2>Helping people understand AI before they are asked to trust it.</h2>
+        </div>
+        <div>
+          <p>Many people hear “artificial intelligence” and picture a computer that thinks. That idea is powerful, but it is also misleading. Most modern AI systems are not conscious minds. They are probabilistic models trained on enormous amounts of data, generating outputs by estimating what is most likely to come next, what pattern fits best, or what answer appears most plausible.</p>
+          <p>That distinction matters. If the training data contains errors, bias, missing context, or harmful assumptions, the system can reproduce those weaknesses with confidence. A polished answer can still be wrong. A helpful tool can still expose private information. A model that feels intelligent can still fail to understand the human stakes of what it is being asked to do.</p>
+          <p>SafelyAI is built to inform people — adults, students, companies, and young users — about both the gifts and dangers of AI. The goal is not fear. The goal is literacy: understanding how AI works, where regulation is heading, what risks deserve attention, and how to use these tools while protecting privacy, safety, and human judgment.</p>
+        </div>
+        <div class="statement-mark"></div>
+      </section>
+<footer class="safely-footer">
+        <div class="footer-inner">
+          <div class="footer-top">
+            <div class="footer-brand">
+              <b>SafelyAI</b>
+              A field guide for AI literacy, governance, privacy, and safer adoption. Built for people who want to understand AI before they are asked to trust it.
+            </div>
+            <div class="footer-note-mini">
+              This site is an educational guide, not legal advice.
+            </div>
+          </div>
+
+          <nav class="footer-links" aria-label="SafelyAI footer links">
+            <a class="footer-button" href="mailto:bradysuburu@gmail.com">Contact</a>
+            <a class="footer-button" href="#" onclick="SafelyAI.footerNote('Privacy')">Privacy</a>
+          </nav>
+        </div>
+      </footer>
+    </div>
+  </section>
+
+  <section id="global" class="page">
+    <div class="page-head">
+      <h2>Global Comparison</h2>
+      <p>The AI race is not only about who builds the strongest model. For a business, the more important question is: where can the product be sold, what duties attach, and how hard is it to prove compliance?</p>
+    </div>
+
+    <section class="map-panel">
+      <div class="kicker">Top AI race jurisdictions + Argentina</div>
+      <h2 style="font-size:34px;letter-spacing:-.04em;font-weight:500;color:var(--cream)">Five core AI markets — plus Argentina’s policy experiment</h2>
+      <p style="font-family:Manrope,system-ui,sans-serif;color:rgba(242,234,216,.72);line-height:1.6;margin-top:10px;max-width:900px">
+        This dashboard treats the United States, China, the European Union, the United Kingdom, and India as the core business-facing AI jurisdictions to track. Argentina is added as a special focus because its AI strategy is unusually important for business planning: it combines AI-hub ambitions, deregulation, data-center investment interest, data-protection guidance, and proposals for AI-friendly legal structures. Stanford’s 2026 AI Index helps explain the core U.S.–China race, while Argentina shows how smaller markets can compete through legal and infrastructure strategy.
+      </p>
+
+      <div class="ai-race-grid">
+        <article class="race-card" onclick="SafelyAI.showById('country-us')">
+          <div class="race-rank">01 · AI infrastructure leader</div>
+          <h3>United States</h3>
+          <p>Frontier model development, cloud infrastructure, venture funding, enterprise AI, and federal/state regulatory friction.</p>
+          <span class="race-pill">Open US playbook →</span>
+        </article>
+        <article class="race-card" onclick="SafelyAI.showById('country-china')">
+          <div class="race-rank">02 · State-directed scale</div>
+          <h3>China</h3>
+          <p>Major model performance, public-facing generative AI filings, content controls, algorithm regulation, and cybersecurity/data rules.</p>
+          <span class="race-pill">Open China playbook →</span>
+        </article>
+        <article class="race-card" onclick="SafelyAI.showById('country-eu')">
+          <div class="race-rank">03 · Regulatory superpower</div>
+          <h3>European Union</h3>
+          <p>Risk-based AI Act, high-risk obligations, transparency duties, GPAI rules, data protection, and conformity evidence.</p>
+          <span class="race-pill">Open EU playbook →</span>
+        </article>
+        <article class="race-card" onclick="SafelyAI.showById('country-uk')">
+          <div class="race-rank">04 · Principles-led hub</div>
+          <h3>United Kingdom</h3>
+          <p>Pro-innovation principles, sector regulators, AI Safety Institute influence, data protection, consumer and product safety rules.</p>
+          <span class="race-pill">Open UK playbook →</span>
+        </article>
+        <article class="race-card" onclick="SafelyAI.showById('country-india')">
+          <div class="race-rank">05 · Scale + adoption market</div>
+          <h3>India</h3>
+          <p>Rapid AI adoption, AI Governance Guidelines, DPDP personal-data law, platform obligations, and public-sector AI growth.</p>
+          <span class="race-pill">Open India playbook →</span>
+        </article>
+        <article class="race-card" onclick="SafelyAI.showById('country-argentina')">
+          <div class="race-rank">Special focus · AI legal experiment</div>
+          <h3>Argentina</h3>
+          <p>Not a top-five frontier model power, but one of the most interesting AI policy experiments: deregulation, AI-hub ambitions, data protection guidance, and proposed AI-friendly investment structures.</p>
+          <span class="race-pill">Open Argentina playbook →</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="map-panel" style="margin-top:22px">
+      <div class="kicker">Country posture map</div>
+      <h2 style="font-size:34px;letter-spacing:-.04em;font-weight:500;color:var(--cream)">How strict is the sales environment?</h2>
+      <div class="comparison-grid">
+        <article class="country">
+          <span class="tag">Fragmented federal-state oversight</span>
+          <h3>United States</h3>
+          <p>The U.S. has no single national AI Act, but companies face federal policy, agency enforcement, state laws, sector rules, and security/export pressures.</p>
+          <ul>
+            <li>State-by-state risk</li>
+            <li>NIST voluntary framework</li>
+            <li>FTC and sector-specific enforcement</li>
+          </ul>
+          <div class="mini-scale"><span style="width:58%"></span></div>
+        </article>
+        <article class="country">
+          <span class="tag">State security + filing model</span>
+          <h3>China</h3>
+          <p>China is more prescriptive for public-facing generative AI, especially around content legality, security assessment, algorithm filing, and model/service registration.</p>
+          <ul>
+            <li>Public-facing GenAI filing</li>
+            <li>Content and security controls</li>
+            <li>Data and algorithm governance</li>
+          </ul>
+          <div class="mini-scale"><span style="width:82%"></span></div>
+        </article>
+        <article class="country">
+          <span class="tag">Formal risk-based regulation</span>
+          <h3>European Union</h3>
+          <p>The EU is the most formalized: the AI Act organizes duties around prohibited uses, high-risk systems, transparency, GPAI models, governance, and penalties.</p>
+          <ul>
+            <li>Risk-tiered legal obligations</li>
+            <li>Defined provider/deployer duties</li>
+            <li>Transparency and enforcement</li>
+          </ul>
+          <div class="mini-scale"><span style="width:94%"></span></div>
+        </article>
+        <article class="country">
+          <span class="tag">Deregulation + AI hub experiment</span>
+          <h3>Argentina</h3>
+          <p>Argentina is not yet a top frontier-model power, but its AI strategy is notable because it is trying to attract AI infrastructure and investment through a lighter regulatory posture.</p>
+          <ul>
+            <li>AI hub positioning</li>
+            <li>Data protection guidance</li>
+            <li>Investment incentives and deregulation</li>
+          </ul>
+          <div class="mini-scale"><span style="width:32%"></span></div>
+        </article>
+      </div>
+    </section>
+  </section>
+
+  <section id="country-us" class="page">
+    <div class="page-head">
+      <button class="jurisdiction-back" onclick="SafelyAI.showById('global')">← Back to Global Comparison</button>
+      <h2>United States</h2>
+      <p>The U.S. is the largest frontier-model and AI infrastructure market, but its legal environment is fragmented across federal policy, agency enforcement, state AI laws, privacy rules, and sector-specific regulation.</p>
+    </div>
+
+    <div class="country-playbook">
+      <article class="country-brief">
+        <div class="kicker">Regulatory posture</div>
+        <h3>Fragmented federal-state compliance</h3>
+        <p>A business selling an AI product in the U.S. should not look for one AI Act. Instead, it should map the product’s use case, affected users, claims made in marketing, data processed, and the states/sectors where it operates. Federal policy currently favors a lighter national framework, but the practical compliance burden can still be high because state laws and agency enforcement may apply.</p>
+        <div class="country-meta-row">
+          <span class="country-meta">No single federal AI Act</span>
+          <span class="country-meta">NIST AI RMF is voluntary but influential</span>
+          <span class="country-meta">State-law patchwork</span>
+          <span class="country-meta">High scrutiny for deceptive AI claims</span>
+        </div>
+      </article>
+
+      <article class="country-checklist">
+        <div class="kicker">Selling checklist</div>
+        <h3>What a business should check first</h3>
+        <ul>
+            <li>Inventory where AI affects people’s rights, money, jobs, health, education, housing, credit, security, or children.</li>
+            <li>Use the NIST AI Risk Management Framework as the baseline for governance, mapping, measuring, and managing AI risk.</li>
+            <li>Substantiate every product claim: do not imply the AI is more accurate, safer, autonomous, or bias-free than evidence supports.</li>
+            <li>Check state-specific laws before launch, especially for high-risk decision systems, synthetic media, employment tools, healthcare, and consumer disclosures.</li>
+            <li>Review data rights, privacy, cybersecurity, vendor contracts, logging, human oversight, incident response, and model/output IP risk.</li>
+            <li>For frontier or security-sensitive models, monitor federal policy on model access, export controls, cybersecurity, and national-security restrictions.</li>
+        </ul>
+      </article>
+    </div>
+
+    <article class="country-sources">
+      <div class="kicker">Validate the source</div>
+      <h3>Primary and reliable links</h3>
+      <p>These links are included so a reader can verify the requirements and continue research from official or highly credible sources.</p>
+      <div class="country-source-list">
+          <a href="https://www.whitehouse.gov/presidential-actions/2025/12/eliminating-state-law-obstruction-of-national-artificial-intelligence-policy/" target="_blank" rel="noopener">White House — National AI policy framework</a>
+          <a href="https://www.whitehouse.gov/presidential-actions/2026/06/promoting-advanced-artificial-intelligence-innovation-and-security/" target="_blank" rel="noopener">White House — Advanced AI innovation and security</a>
+          <a href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener">NIST — AI Risk Management Framework</a>
+          <a href="https://www.ftc.gov/industry/technology/artificial-intelligence" target="_blank" rel="noopener">FTC — Artificial intelligence topic hub</a>
+          <a href="https://hai.stanford.edu/ai-index/2026-ai-index-report" target="_blank" rel="noopener">Stanford HAI — 2026 AI Index</a>
+      </div>
+    </article>
+  </section>
+
+  <section id="country-china" class="page">
+    <div class="page-head">
+      <button class="jurisdiction-back" onclick="SafelyAI.showById('global')">← Back to Global Comparison</button>
+      <h2>China</h2>
+      <p>China is one of the two leading AI capability markets and has a more state-directed regulatory structure for public-facing generative AI services, recommendation algorithms, content controls, cybersecurity, and data governance.</p>
+    </div>
+
+    <div class="country-playbook">
+      <article class="country-brief">
+        <div class="kicker">Regulatory posture</div>
+        <h3>Filing, security, and content-control model</h3>
+        <p>A business selling an AI product in mainland China must determine whether it is providing generative AI services to the domestic public. If so, it may face CAC obligations around security assessment, algorithm/model filing, content governance, user safeguards, and labeling. Internal-only enterprise AI may be treated differently, but public access changes the compliance profile quickly.</p>
+        <div class="country-meta-row">
+          <span class="country-meta">Public-facing GenAI rules</span>
+          <span class="country-meta">CAC filing/registration</span>
+          <span class="country-meta">Content legality controls</span>
+          <span class="country-meta">Cybersecurity and data rules</span>
+        </div>
+      </article>
+
+      <article class="country-checklist">
+        <div class="kicker">Selling checklist</div>
+        <h3>What a business should check first</h3>
+        <ul>
+            <li>Decide whether the service is public-facing in mainland China; if yes, assess the Interim Measures for generative AI services.</li>
+            <li>Plan for content safety controls, prohibited-content filters, complaint mechanisms, and processes for correcting unlawful or harmful outputs.</li>
+            <li>Check whether security assessment, algorithm filing, or generative-AI service registration is required before launch.</li>
+            <li>Map personal-information processing, important-data handling, cross-border data transfers, and cybersecurity obligations.</li>
+            <li>Localize user-facing disclosures, terms, and moderation workflows to Chinese regulatory expectations.</li>
+            <li>Treat China as a launch market requiring local counsel and regulator-facing documentation, not merely translated product terms.</li>
+        </ul>
+      </article>
+    </div>
+
+    <article class="country-sources">
+      <div class="kicker">Validate the source</div>
+      <h3>Primary and reliable links</h3>
+      <p>These links are included so a reader can verify the requirements and continue research from official or highly credible sources.</p>
+      <div class="country-source-list">
+          <a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" target="_blank" rel="noopener">CAC — Interim Measures for Generative AI Services</a>
+          <a href="https://www.cac.gov.cn/2024-04/02/c_1713729983803145.htm" target="_blank" rel="noopener">CAC — Generative AI service filing announcement</a>
+          <a href="https://www.chinalawtranslate.com/en/generative-ai-interim/" target="_blank" rel="noopener">China Law Translate — English translation of GenAI Interim Measures</a>
+          <a href="https://hai.stanford.edu/ai-index/2026-ai-index-report" target="_blank" rel="noopener">Stanford HAI — 2026 AI Index</a>
+      </div>
+    </article>
+  </section>
+
+  <section id="country-eu" class="page">
+    <div class="page-head">
+      <button class="jurisdiction-back" onclick="SafelyAI.showById('global')">← Back to Global Comparison</button>
+      <h2>European Union</h2>
+      <p>The EU is the most important regulatory market because the AI Act is a comprehensive, risk-based legal framework that applies to providers and deployers inside and outside the EU when AI systems are placed on the EU market or used in the EU.</p>
+    </div>
+
+    <div class="country-playbook">
+      <article class="country-brief">
+        <div class="kicker">Regulatory posture</div>
+        <h3>Comprehensive risk-based framework</h3>
+        <p>A business selling an AI product into the EU must classify the system before selling it: prohibited, high-risk, limited/transparency-risk, GPAI, or lower-risk. The classification drives documentation, human oversight, transparency, data governance, conformity, post-market monitoring, and penalties.</p>
+        <div class="country-meta-row">
+          <span class="country-meta">AI Act applies extraterritorially</span>
+          <span class="country-meta">High-risk = Article 6 + Annex III</span>
+          <span class="country-meta">Transparency = Article 50</span>
+          <span class="country-meta">GPAI duties for model providers</span>
+        </div>
+      </article>
+
+      <article class="country-checklist">
+        <div class="kicker">Selling checklist</div>
+        <h3>What a business should check first</h3>
+        <ul>
+            <li>Classify the AI system: prohibited use, high-risk system, transparency-obligation system, GPAI model, or lower-risk product.</li>
+            <li>If high-risk, prepare risk management, data governance, technical documentation, logging, instructions for use, human oversight, robustness, accuracy, and cybersecurity evidence.</li>
+            <li>If the system interacts with people, generates synthetic content, or involves emotion/biometric categorization, check Article 50 transparency duties.</li>
+            <li>If providing a general-purpose AI model, assess GPAI documentation, copyright-policy, downstream information, and systemic-risk obligations.</li>
+            <li>Identify your role: provider, deployer, importer, distributor, authorized representative, or product manufacturer.</li>
+            <li>Coordinate AI Act compliance with GDPR, cybersecurity, product safety, consumer protection, and sector-specific EU rules.</li>
+        </ul>
+      </article>
+    </div>
+
+    <article class="country-sources">
+      <div class="kicker">Validate the source</div>
+      <h3>Primary and reliable links</h3>
+      <p>These links are included so a reader can verify the requirements and continue research from official or highly credible sources.</p>
+      <div class="country-source-list">
+          <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng" target="_blank" rel="noopener">EUR-Lex — Official EU AI Act text</a>
+          <a href="https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" target="_blank" rel="noopener">European Commission — AI Act overview</a>
+          <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-50" target="_blank" rel="noopener">EU AI Act Service Desk — Article 50</a>
+          <a href="https://hai.stanford.edu/ai-index/2026-ai-index-report" target="_blank" rel="noopener">Stanford HAI — 2026 AI Index</a>
+      </div>
+    </article>
+  </section>
+
+  <section id="country-uk" class="page">
+    <div class="page-head">
+      <button class="jurisdiction-back" onclick="SafelyAI.showById('global')">← Back to Global Comparison</button>
+      <h2>United Kingdom</h2>
+      <p>The UK remains a major AI research and safety-policy hub. Its current approach is principles-led and regulator-led rather than a single comprehensive AI statute, though future frontier-model rules remain a live policy area.</p>
+    </div>
+
+    <div class="country-playbook">
+      <article class="country-brief">
+        <div class="kicker">Regulatory posture</div>
+        <h3>Principles-led, sector-regulator model</h3>
+        <p>A business selling an AI product in the UK should map which existing regulator controls the product context: data protection, consumer protection, financial services, health, employment, product safety, online safety, or competition. The UK’s five AI principles guide regulators but are not a single checklist statute.</p>
+        <div class="country-meta-row">
+          <span class="country-meta">No single comprehensive AI Act</span>
+          <span class="country-meta">Five cross-sector principles</span>
+          <span class="country-meta">Regulator-led implementation</span>
+          <span class="country-meta">AI safety policy influence</span>
+        </div>
+      </article>
+
+      <article class="country-checklist">
+        <div class="kicker">Selling checklist</div>
+        <h3>What a business should check first</h3>
+        <ul>
+            <li>Identify the relevant UK regulator by sector and use case rather than assuming one AI regulator controls the entire product.</li>
+            <li>Map the product against the five principles: safety/security/robustness, transparency/explainability, fairness, accountability/governance, and contestability/redress.</li>
+            <li>Check UK GDPR/Data Protection Act duties for training data, user data, profiling, automated decisions, children, and sensitive data.</li>
+            <li>For consumer-facing AI, review advertising, unfair commercial practice, product safety, online safety, and competition risk.</li>
+            <li>For advanced or frontier models, monitor AI Safety Institute work and any future binding rules for powerful models.</li>
+            <li>Document governance even where rules are voluntary, because UK regulators may expect evidence of responsible design and deployment.</li>
+        </ul>
+      </article>
+    </div>
+
+    <article class="country-sources">
+      <div class="kicker">Validate the source</div>
+      <h3>Primary and reliable links</h3>
+      <p>These links are included so a reader can verify the requirements and continue research from official or highly credible sources.</p>
+      <div class="country-source-list">
+          <a href="https://www.gov.uk/government/publications/ai-regulation-a-pro-innovation-approach/white-paper" target="_blank" rel="noopener">GOV.UK — Pro-innovation approach to AI regulation</a>
+          <a href="https://www.gov.uk/government/publications/implementing-the-uks-ai-regulatory-principles-initial-guidance-for-regulators/implementing-the-uks-ai-regulatory-principles-initial-guidance-for-regulators" target="_blank" rel="noopener">GOV.UK — Implementing UK AI regulatory principles</a>
+          <a href="https://www.gov.uk/government/publications/regulators-strategic-approaches-to-ai/regulators-strategic-approaches-to-ai" target="_blank" rel="noopener">GOV.UK — Regulators’ strategic approaches to AI</a>
+          <a href="https://www.aisi.gov.uk/" target="_blank" rel="noopener">UK AI Safety Institute</a>
+          <a href="https://hai.stanford.edu/ai-index/2026-ai-index-report" target="_blank" rel="noopener">Stanford HAI — 2026 AI Index</a>
+      </div>
+    </article>
+  </section>
+
+  <section id="country-india" class="page">
+    <div class="page-head">
+      <button class="jurisdiction-back" onclick="SafelyAI.showById('global')">← Back to Global Comparison</button>
+      <h2>India</h2>
+      <p>India is a major AI adoption and market-scale jurisdiction. It does not currently operate through an EU-style AI Act, but the AI Governance Guidelines and DPDP personal-data regime are central for businesses selling AI products there.</p>
+    </div>
+
+    <div class="country-playbook">
+      <article class="country-brief">
+        <div class="kicker">Regulatory posture</div>
+        <h3>Guidelines + data-protection model</h3>
+        <p>A business selling an AI product in India should first focus on digital personal data, user consent/notice, children’s data, platform responsibility, and whether the AI system creates foreseeable harm. AI governance is developing through guidelines, public-sector AI initiatives, and sectoral rules rather than a single comprehensive AI statute.</p>
+        <div class="country-meta-row">
+          <span class="country-meta">AI Governance Guidelines</span>
+          <span class="country-meta">DPDP Act</span>
+          <span class="country-meta">Large user market</span>
+          <span class="country-meta">Sector/platform obligations</span>
+        </div>
+      </article>
+
+      <article class="country-checklist">
+        <div class="kicker">Selling checklist</div>
+        <h3>What a business should check first</h3>
+        <ul>
+            <li>Review the India AI Governance Guidelines for safe, trusted, inclusive, and responsible AI expectations.</li>
+            <li>Map all digital personal data processed by the AI product under the DPDP Act, including notice, consent, lawful purpose, withdrawal, and data principal rights.</li>
+            <li>Check children’s data, sensitive use cases, profiling, automated decisions, and any sector-specific rules for finance, health, education, employment, or public services.</li>
+            <li>For platform or user-generated content features, assess intermediary/platform obligations and content-risk controls.</li>
+            <li>Document model limitations, user disclosures, privacy controls, data retention, security safeguards, and human escalation paths.</li>
+            <li>Monitor MeitY updates because India’s AI governance model is still evolving and may become more operational over time.</li>
+        </ul>
+      </article>
+    </div>
+
+    <article class="country-sources">
+      <div class="kicker">Validate the source</div>
+      <h3>Primary and reliable links</h3>
+      <p>These links are included so a reader can verify the requirements and continue research from official or highly credible sources.</p>
+      <div class="country-source-list">
+          <a href="https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/nov/doc2025115685601.pdf" target="_blank" rel="noopener">Government of India / PIB — India AI Governance Guidelines PDF</a>
+          <a href="https://www.meity.gov.in/static/uploads/2024/06/2bf1f0e9f04e6fb4f8fef35e82c42aa5.pdf" target="_blank" rel="noopener">MeitY — Digital Personal Data Protection Act, 2023</a>
+          <a href="https://indiaai.gov.in/" target="_blank" rel="noopener">IndiaAI Mission</a>
+          <a href="https://hai.stanford.edu/ai-index/2026-ai-index-report" target="_blank" rel="noopener">Stanford HAI — 2026 AI Index</a>
+      </div>
+    </article>
+  </section>
+
+  <section id="country-argentina" class="page">
+    <div class="page-head">
+      <button class="jurisdiction-back" onclick="SafelyAI.showById('global')">← Back to Global Comparison</button>
+      <h2>Argentina</h2>
+      <p>Argentina is included as a special focus because its AI policy direction is unusually interesting: it is trying to position itself as an AI hub through deregulation, energy/infrastructure strategy, investment incentives, and data-protection guidance rather than through an EU-style AI Act.</p>
+    </div>
+
+    <div class="country-playbook">
+      <article class="country-brief">
+        <div class="kicker">Regulatory posture</div>
+        <h3>AI hub experiment with data-protection guardrails</h3>
+        <p>A business selling or deploying an AI product in Argentina should treat the market as lighter-touch than the EU, but not lawless. The practical starting point is data protection, transparency, automated decision-making risk, consumer/product claims, cybersecurity, and whether the business is seeking infrastructure or investment benefits under Argentina’s broader pro-investment agenda.</p>
+        <div class="country-meta-row">
+          <span class="country-meta">No EU-style AI Act</span>
+          <span class="country-meta">AAIP transparency/data program</span>
+          <span class="country-meta">AI hub strategy</span>
+          <span class="country-meta">Potential infrastructure incentives</span>
+        </div>
+      </article>
+
+      <article class="country-checklist">
+        <div class="kicker">Selling checklist</div>
+        <h3>What a business should check first</h3>
+        <ul>
+            <li>Confirm whether the product processes personal data under Argentina’s Personal Data Protection Law and AAIP expectations.</li>
+            <li>Use the AAIP’s AI transparency/data-protection program and guidance as the practical baseline for responsible AI documentation.</li>
+            <li>If the product uses automated decision-making, prepare transparency explanations, data-governance records, and a process for contesting or correcting harmful outcomes.</li>
+            <li>Be careful with marketing: a lighter regulatory environment does not remove consumer-protection, privacy, cybersecurity, contract, IP, or liability risk.</li>
+            <li>For large infrastructure, cloud, or data-center projects, monitor investment-incentive regimes and energy-supply strategy, especially AI-compute projects.</li>
+            <li>Monitor current proposals around AI-friendly corporate/legal structures; treat them as developing policy rather than settled compliance law.</li>
+        </ul>
+      </article>
+    </div>
+
+    <article class="country-sources">
+      <div class="kicker">Validate the source</div>
+      <h3>Primary and reliable links</h3>
+      <p>These links are included so a reader can verify the requirements and continue research from official or highly credible sources.</p>
+      <div class="country-source-list">
+          <a href="https://www.argentina.gob.ar/normativa/nacional/resoluci%C3%B3n-161-2023-389231/texto" target="_blank" rel="noopener">Argentina AAIP — Resolution 161/2023 AI Transparency and Data Protection Program</a>
+          <a href="https://www.argentina.gob.ar/noticias/programa-de-transparencia-y-proteccion-de-datos-personales-en-el-uso-de-la-inteligencia" target="_blank" rel="noopener">Argentina government — AI transparency/data protection program overview</a>
+          <a href="https://www.argentina.gob.ar/noticias/guia-de-la-aaip-para-usar-la-inteligencia-artificial-de-manera-responsable" target="_blank" rel="noopener">Argentina government — AAIP responsible AI guide for public/private entities</a>
+          <a href="https://oecd.ai/en/dashboards/national/argentina" target="_blank" rel="noopener">OECD.AI — Argentina national AI policy initiatives</a>
+          <a href="https://cancilleria.gob.ar/en/cie/publications/argentina-artificial-intelligence-hub" target="_blank" rel="noopener">Argentina Foreign Ministry — Argentina as an artificial intelligence hub</a>
+          <a href="https://www.reuters.com/world/americas/openai-sur-energy-weigh-25-billion-argentina-data-center-project-2025-10-10/" target="_blank" rel="noopener">Reuters — OpenAI and Sur Energy weigh $25B Argentina data-center project</a>
+          <a href="https://www.ft.com/content/f93022fe-43f7-437d-abd8-06c457c0a43c" target="_blank" rel="noopener">Financial Times — Milei on AI and premature regulation</a>
+      </div>
+    </article>
+  </section>
+
+  <section id="eu" class="page">
+    <div class="page-head">
+      <h2>EU AI Act</h2>
+      <p>The bubble map has been rebuilt inside this file so it matches the rest of the nature-forward design instead of looking like a separate embedded form.</p>
+    </div>
+    <div class="notice">
+      Official source: <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng" target="_blank" rel="noopener">Regulation (EU) 2024/1689 on EUR-Lex</a>.
+    </div>
+
+    <section class="bubble-board" id="euBubbleBoard">
+      <button class="zoom-back" onclick="SafelyAI.zoomOutBubbles()">← Back to main map</button>
+      <div class="kicker">EU AI Act obligation map</div>
+
+      <div class="bubble-stage">
+        <div class="bubble-level base active" id="bubbleBase">
+          <div class="bubble" style="width:190px;height:190px;left:7%;top:16%" onclick="SafelyAI.zoomBubbles('prohibited')"><b>Prohibited Practices</b><small>Article 5</small></div>
+          <div class="bubble" style="width:230px;height:230px;left:34%;top:8%" onclick="SafelyAI.zoomBubbles('highrisk')"><b>High-Risk Systems</b><small>Article 6</small></div>
+          <div class="bubble" style="width:175px;height:175px;left:70%;top:15%" onclick="SafelyAI.zoomBubbles('transparency')"><b>Transparency</b><small>Article 50</small></div>
+          <div class="bubble" style="width:170px;height:170px;left:18%;top:48%" onclick="SafelyAI.zoomBubbles('operators')"><b>Providers + Deployers</b><small>Who must do what?</small></div>
+          <div class="bubble" style="width:155px;height:155px;left:73%;top:53%" onclick="SafelyAI.zoomBubbles('gpai')"><b>GPAI</b><small>General-purpose AI</small></div>
+          <div class="bubble-detail nested">
+            <h3>Click a bubble to zoom into its obligations</h3>
+            <p>The map opens into a second layer of related duties. You will still see the edges of the original map behind it so the user knows where they came from.</p>
+          </div>
+        </div>
+
+        <div class="bubble-level detail" data-level="prohibited">
+          <div class="bubble sub" style="width:185px;height:185px;left:10%;top:18%" onclick="SafelyAI.setBubbleDetail('Manipulative or Exploitative AI','Systems that materially distort behavior or exploit vulnerability can fall into prohibited-use territory. This is the first screen before ordinary compliance analysis.')"><b>Manipulation</b><small>Behavioral distortion</small></div>
+          <div class="bubble sub" style="width:190px;height:190px;left:39%;top:10%" onclick="SafelyAI.setBubbleDetail('Social Scoring','Public-authority-style social scoring is one of the clearest prohibited categories under the EU AI Act.')"><b>Social Scoring</b><small>Prohibited category</small></div>
+          <div class="bubble sub" style="width:210px;height:210px;left:66%;top:25%" onclick="SafelyAI.setBubbleDetail('Biometric Restrictions','Certain biometric categorization and real-time remote biometric identification uses are restricted or prohibited depending on context and legal authorization.')"><b>Biometric Limits</b><small>Context-sensitive</small></div>
+          <div class="bubble-detail nested" id="detail-prohibited"><h3>Prohibited Practices</h3><p>Start here. If a use is banned, the company does not move forward simply by adding disclosure or documentation.</p></div>
+        </div>
+
+        <div class="bubble-level detail" data-level="highrisk">
+          <div class="bubble sub" style="width:185px;height:185px;left:8%;top:12%" onclick="SafelyAI.setBubbleDetail('Risk Management','High-risk systems require a continuous risk-management system across the AI lifecycle.')"><b>Risk Management</b><small>Lifecycle duty</small></div>
+          <div class="bubble sub" style="width:190px;height:190px;left:34%;top:6%" onclick="SafelyAI.setBubbleDetail('Data Governance','Training, validation, and testing data must be relevant, representative where appropriate, and governed to reduce foreseeable risks and bias.')"><b>Data Governance</b><small>Quality + bias</small></div>
+          <div class="bubble sub" style="width:175px;height:175px;left:62%;top:12%" onclick="SafelyAI.setBubbleDetail('Human Oversight','High-risk AI must be designed so humans can appropriately oversee use and intervene where necessary.')"><b>Human Oversight</b><small>Meaningful control</small></div>
+          <div class="bubble sub" style="width:170px;height:170px;left:23%;top:46%" onclick="SafelyAI.setBubbleDetail('Technical Documentation','Providers must keep documentation that demonstrates compliance and explains the system’s intended purpose, design, and performance.')"><b>Documentation</b><small>Evidence trail</small></div>
+          <div class="bubble sub" style="width:170px;height:170px;left:53%;top:48%" onclick="SafelyAI.setBubbleDetail('Accuracy, Robustness, Cybersecurity','High-risk systems must meet appropriate levels of accuracy, robustness, and cybersecurity throughout their lifecycle.')"><b>Cybersecurity</b><small>Reliability</small></div>
+          <div class="bubble-detail nested" id="detail-highrisk"><h3>High-Risk Systems</h3><p>This is the deepest compliance zone: testing, documentation, human oversight, monitoring, and cybersecurity all matter.</p></div>
+        </div>
+
+        <div class="bubble-level detail" data-level="transparency">
+          <div class="bubble sub" style="width:190px;height:190px;left:9%;top:18%" onclick="SafelyAI.setBubbleDetail('Chatbot Disclosure','Users should know when they are interacting with an AI system, unless the context makes it obvious.')"><b>AI Interaction</b><small>Chatbot notice</small></div>
+          <div class="bubble sub" style="width:205px;height:205px;left:38%;top:8%" onclick="SafelyAI.setBubbleDetail('Deepfake Disclosure','Artificially generated or manipulated content may need to be disclosed as such, especially when it resembles real people, events, or speech.')"><b>Deepfakes</b><small>Generated content</small></div>
+          <div class="bubble sub" style="width:180px;height:180px;left:67%;top:29%" onclick="SafelyAI.setBubbleDetail('Emotion or Biometric Notice','Deployers must inform people when emotion recognition or biometric categorization systems are being used, subject to exceptions and data-protection law.')"><b>Biometric Notice</b><small>Inform people</small></div>
+          <div class="bubble-detail nested" id="detail-transparency"><h3>Transparency</h3><p>Article 50 is the key area for disclosures: tell people when AI is involved and when content is artificial or manipulated.</p></div>
+        </div>
+
+        <div class="bubble-level detail" data-level="operators">
+          <div class="bubble sub" style="width:210px;height:210px;left:13%;top:12%" onclick="SafelyAI.setBubbleDetail('Provider Duties','Providers are generally responsible for design-side compliance: documentation, risk controls, instructions, conformity, monitoring, and corrective actions.')"><b>Providers</b><small>Build/place on market</small></div>
+          <div class="bubble sub" style="width:205px;height:205px;left:48%;top:14%" onclick="SafelyAI.setBubbleDetail('Deployer Duties','Deployers are generally responsible for use-side compliance: following instructions, human oversight, monitoring, logs where required, and proper data input practices.')"><b>Deployers</b><small>Use the system</small></div>
+          <div class="bubble sub" style="width:170px;height:170px;left:36%;top:52%" onclick="SafelyAI.setBubbleDetail('Shared Responsibility','One company may be both provider and deployer depending on whether it develops, modifies, integrates, or uses the system.')"><b>Role Check</b><small>Who are you?</small></div>
+          <div class="bubble-detail nested" id="detail-operators"><h3>Providers + Deployers</h3><p>Compliance depends heavily on the operator role. Start by asking whether the company builds, places on market, imports, distributes, or uses the AI system.</p></div>
+        </div>
+
+        <div class="bubble-level detail" data-level="gpai">
+          <div class="bubble sub" style="width:190px;height:190px;left:12%;top:15%" onclick="SafelyAI.setBubbleDetail('Technical Documentation','GPAI providers must prepare and maintain technical documentation and provide downstream information to support compliance.')"><b>Documentation</b><small>Model information</small></div>
+          <div class="bubble sub" style="width:205px;height:205px;left:39%;top:9%" onclick="SafelyAI.setBubbleDetail('Copyright Policy','GPAI providers must put in place a policy to comply with EU copyright law.')"><b>Copyright</b><small>Training/data policy</small></div>
+          <div class="bubble sub" style="width:190px;height:190px;left:68%;top:28%" onclick="SafelyAI.setBubbleDetail('Systemic Risk','GPAI models with systemic risk face additional evaluation, mitigation, incident reporting, and cybersecurity expectations.')"><b>Systemic Risk</b><small>Extra duties</small></div>
+          <div class="bubble-detail nested" id="detail-gpai"><h3>General-Purpose AI</h3><p>GPAI rules apply to model providers and become more demanding when a model is considered to have systemic risk.</p></div>
+        </div>
+      </div>
+    </section>    </section>
+</section>
+
+  <section id="us" class="page">
+    <div class="page-head">
+      <h2>US Regulation</h2>
+      <p>The United States is moving through a fragmented model: federal executive action, procurement/security rules, agency enforcement, and state legislation. Unlike the EU, the US does not currently operate through one comprehensive AI statute.</p>
+    </div>
+
+    <div class="grid">
+      <article class="card dark wide">
+        <h3>Current synopsis</h3>
+        <p>US AI governance is best described as a contested patchwork. The Trump Administration has emphasized AI leadership, fewer barriers to development, cybersecurity, and national security. At the same time, states such as California, Colorado, Texas, and Illinois have created or proposed AI-specific obligations, especially around transparency, high-risk decision systems, employment, health, frontier-model safety, and deceptive synthetic content.</p>
+        <p style="margin-top:12px">This creates a practical compliance problem: companies may face sector-specific federal rules and state obligations even without a single federal AI Act.</p>
+      </article>
+      <article class="card dark">
+        <h3>Compliance posture</h3>
+        <p>For companies, the safest US posture is inventory first: identify where AI is used, whether it affects consumers, workers, patients, credit, housing, education, or security, and whether disclosures, impact assessments, testing, or incident reporting may apply.</p>
+      </article>
+    </div>
+
+    <div class="grid">
+      <article class="card dark full">
+        <h3>Key developments timeline</h3>
+        <div class="timeline">
+          <div class="event">
+            <time>Sept. 29, 2024</time>
+            <h4>California SB 1047 vetoed</h4>
+            <p>Governor Gavin Newsom vetoed SB 1047, which would have required safeguards for large AI model developers and created a Board of Frontier Models. His veto message criticized regulating based only on model size/cost rather than actual risk context.</p>
+          </div>
+          <div class="event">
+            <time>Jan. 23, 2025</time>
+            <h4>Trump EO 14179: Removing Barriers to American Leadership in AI</h4>
+            <p>The administration revoked the prior Biden AI order and directed agencies toward removing barriers to US AI leadership.</p>
+          </div>
+          <div class="event">
+            <time>Dec. 11, 2025</time>
+            <h4>National AI policy framework order</h4>
+            <p>The White House argued against a 50-state patchwork and directed federal action against state AI laws viewed as inconsistent with federal policy.</p>
+          </div>
+          <div class="event">
+            <time>2026</time>
+            <h4>State AI laws mature</h4>
+            <p>California transparency/frontier-model laws, Colorado high-risk AI rules, Texas AI governance, and Illinois employment-related AI rules form a growing compliance layer for companies operating across states.</p>
+          </div>
+          <div class="event">
+            <time>June 2026</time>
+            <h4>Anthropic Fable 5 / Mythos 5 suspension reported</h4>
+            <p>Current reporting says US action restricted access to Anthropic’s advanced models Fable 5 and Mythos 5 because of national-security and cybersecurity concerns. This item should be treated as developing news, not a stable statutory rule.</p>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="grid">
+      <article class="card">
+        <h3>Federal direction</h3>
+        <ul>
+          <li>Promote AI innovation and US leadership.</li>
+          <li>Reduce regulatory barriers viewed as slowing domestic AI development.</li>
+          <li>Use AI for cybersecurity modernization and federal systems defense.</li>
+          <li>Challenge state AI laws that the administration views as conflicting with national policy.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>State-law pressure</h3>
+        <ul>
+          <li>California: training-data transparency, AI-content transparency, frontier-model transparency/safety, healthcare chatbot disclosures.</li>
+          <li>Colorado: high-risk AI duties focused on algorithmic discrimination and consumer consequential decisions.</li>
+          <li>Illinois: employment AI restrictions tied to discrimination protections.</li>
+          <li>Texas: broader AI governance rules for developers and deployers serving Texas residents.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>Model security</h3>
+        <ul>
+          <li>Frontier models are increasingly treated as cybersecurity and national-security infrastructure.</li>
+          <li>Jailbreak resistance, model access controls, and vulnerability reporting are becoming governance issues.</li>
+          <li>The Anthropic incident shows how fast security concerns can affect deployment access.</li>
+        </ul>
+      </article>
+    </div>
+</section>
+
+  <section id="models" class="page">
+    <div class="page-head">
+      <h2>Frontier Models</h2>
+      <p>A practical model map for choosing the right frontier system. The point is not that one model “wins” everything — the best choice depends on reasoning depth, coding, multimodality, privacy needs, cost, speed, and whether the model is open or closed.</p>
+    </div>
+
+    <section class="map-panel">
+      <div class="kicker">Practical leaderboard</div>
+      <h2 style="font-size:34px;letter-spacing:-.04em;font-weight:500;color:var(--cream)">Most advanced models by practical strength</h2>
+      <p style="font-family:Manrope,system-ui,sans-serif;color:rgba(242,234,216,.72);line-height:1.6;margin-top:10px;max-width:860px">
+        This is an editorial dashboard ranking, not a legal or scientific benchmark. It combines public benchmark reputation, provider documentation, use-case fit, and safety/deployment considerations. Always verify current model cards before relying on a model for high-stakes work.
+      </p>
+
+      <table class="model-table" aria-label="Frontier model leaderboard">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Model</th>
+            <th>Best for</th>
+            <th>Strengths</th>
+            <th>Caution</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#1</td>
+            <td><div class="model-name">GPT-5.5 / GPT-5.5 Pro</div><div class="model-meta">OpenAI · frontier closed model</div></td>
+            <td>Professional reasoning, coding, writing, policy analysis, agentic work</td>
+            <td>Strong general intelligence; especially useful when a task needs synthesis across law, strategy, code, and writing.</td>
+            <td>Closed model; verify sensitive or legal outputs with sources.</td>
+          </tr>
+          <tr>
+            <td>#2</td>
+            <td><div class="model-name">Claude Opus 4.8</div><div class="model-meta">Anthropic · frontier closed model</div></td>
+            <td>Careful writing, research assistance, coding, long-form reasoning, safety-sensitive drafting</td>
+            <td>Strong coding and agentic tasks; Anthropic emphasizes alignment and lower misaligned-behavior rates than prior Opus models.</td>
+            <td>Model access can be affected by security, licensing, or jurisdictional restrictions.</td>
+          </tr>
+          <tr>
+            <td>#3</td>
+            <td><div class="model-name">Gemini 3.1 Pro</div><div class="model-meta">Google DeepMind · multimodal frontier model</div></td>
+            <td>Multimodal reasoning, large document/video/audio analysis, planning, Google ecosystem workflows</td>
+            <td>Designed for complex multimodal tasks and large-context problem solving.</td>
+            <td>Best when its multimodal strengths matter; compare with specialist coding/reasoning models for narrow tasks.</td>
+          </tr>
+          <tr>
+            <td>#4</td>
+            <td><div class="model-name">Claude Fable 5 / Mythos 5</div><div class="model-meta">Anthropic · advanced/limited availability</div></td>
+            <td>High-end agentic, coding, and research workflows where access is approved</td>
+            <td>Anthropic lists Fable 5 as generally available and Mythos 5 as limited availability for approved customers.</td>
+            <td>Reported export/security restrictions make this a developing-risk category.</td>
+          </tr>
+          <tr>
+            <td>#5</td>
+            <td><div class="model-name">DeepSeek V4 Pro</div><div class="model-meta">DeepSeek · open model/API ecosystem</div></td>
+            <td>Cost-sensitive reasoning, coding, STEM, open-model experimentation</td>
+            <td>DeepSeek describes V4 Pro as leading current open models in reasoning, Math/STEM, coding, and agentic benchmarks.</td>
+            <td>Use extra verification for high-stakes or regulated domains.</td>
+          </tr>
+          <tr>
+            <td>#6</td>
+            <td><div class="model-name">Grok 4 / Grok 4 Heavy</div><div class="model-meta">xAI · real-time/search-oriented model</div></td>
+            <td>Current-event exploration, social/web context, real-time search, fast ideation</td>
+            <td>xAI emphasizes reasoning, code, voice, image, video, and real-time search integration.</td>
+            <td>Real-time content needs source checking; not ideal as sole authority.</td>
+          </tr>
+          <tr>
+            <td>#7</td>
+            <td><div class="model-name">Llama 4 Scout / Maverick</div><div class="model-meta">Meta · open-weight multimodal family</div></td>
+            <td>Custom deployment, privacy-controlled environments, open-weight experimentation</td>
+            <td>Open-weight, natively multimodal models with very large context support; useful when organizations need more control.</td>
+            <td>May require engineering resources and governance controls to deploy safely.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="model-hero">
+      <article class="model-score">
+        <div class="kicker">Choosing by task</div>
+        <h3>Which model should someone actually use?</h3>
+        <p>For everyday users, start with the model that is easiest to verify and safest for your data. For companies, the “best” model is usually the one that fits the risk level: internal brainstorming is different from medical, legal, employment, cybersecurity, education, or consumer-facing decisions.</p>
+      </article>
+      <article class="model-score">
+        <div class="kicker">Privacy reminder</div>
+        <h3>Do not feed the forest everything.</h3>
+        <p>Assume prompts, uploaded files, and outputs may create privacy, confidentiality, or compliance concerns. Before using any frontier model, check whether the data includes personal information, trade secrets, medical data, student records, financial data, or security details.</p>
+      </article>
+    </section>
+
+    <section class="map-panel">
+      <div class="kicker">Use-case categories</div>
+      <div class="use-grid">
+        <article class="use-card"><span class="use-chip">Reasoning</span><h4>Policy, law, strategy</h4><p>Use GPT-5.5 Pro, Claude Opus 4.8, or Gemini 3.1 Pro. Require citations and human review for legal or compliance conclusions.</p></article>
+        <article class="use-card"><span class="use-chip">Coding</span><h4>Software and agents</h4><p>Use GPT-5.5, Claude Opus 4.8, DeepSeek V4 Pro, or Fable/Mythos where available. Test code; never trust generated security logic blindly.</p></article>
+        <article class="use-card"><span class="use-chip">Multimodal</span><h4>Images, video, audio, documents</h4><p>Use Gemini 3.1 Pro for large multimodal inputs, or GPT/Claude depending on workflow. Confirm OCR, chart, and image interpretations.</p></article>
+        <article class="use-card"><span class="use-chip">Open control</span><h4>Private deployment</h4><p>Use Llama 4 or DeepSeek when model control, local deployment, cost, or transparency matters more than peak closed-model performance.</p></article>
+        <article class="use-card"><span class="use-chip">Current events</span><h4>Fresh public information</h4><p>Use models with real-time search such as Grok or browsing-enabled systems, but always require source links and compare against reliable outlets.</p></article>
+        <article class="use-card"><span class="use-chip">Education</span><h4>Learning without outsourcing</h4><p>Use any strong model as a tutor, not a replacement for thinking. Ask for explanations, quizzes, and correction rather than final answers only.</p></article>
+      </div>
+    </section>
+</section>
+
+</main>
+
+<script>
+const SafelyAI = {
+  toggleMenu(force){
+    const drawer = document.getElementById('drawer');
+    const scrim = document.getElementById('scrim');
+    const open = typeof force === 'boolean' ? force : !drawer.classList.contains('open');
+    drawer.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+  },
+  show(pageId, btn){
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    document.querySelectorAll('.drawer button').forEach(b => b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+    this.toggleMenu(false);
+    window.scrollTo({top:0, behavior:'smooth'});
+  },
+  showById(pageId){
+    const buttons = Array.from(document.querySelectorAll('.drawer button'));
+    const labels = {global:'global comparison', eu:'eu ai act', us:'us regulation', home:'home', models:'frontier models', 'country-us':'united states', 'country-china':'china', 'country-eu':'european union', 'country-uk':'united kingdom', 'country-india':'india', 'country-argentina':'argentina'};
+    const btn = buttons.find(b => b.textContent.toLowerCase().includes(labels[pageId]));
+    if(btn){
+      this.show(pageId, btn);
+    } else {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+      document.querySelectorAll('.drawer button').forEach(b => b.classList.remove('active'));
+      const globalBtn = buttons.find(b => b.textContent.toLowerCase().includes('global comparison'));
+      if(pageId.startsWith('country-') && globalBtn) globalBtn.classList.add('active');
+      this.toggleMenu(false);
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+  },
+  bubble(title, text){
+    const detail = document.getElementById('bubbleDetail');
+    if(detail) detail.innerHTML = `<h3>${title}</h3><p>${text}</p>`;
+  },
+  zoomBubbles(level){
+    const board = document.getElementById('euBubbleBoard');
+    if(!board) return;
+    board.classList.add('zoomed');
+    document.querySelectorAll('.bubble-level.detail').forEach(el => {
+      el.classList.toggle('active', el.dataset.level === level);
+    });
+  },
+  zoomOutBubbles(){
+    const board = document.getElementById('euBubbleBoard');
+    if(!board) return;
+    board.classList.remove('zoomed');
+    document.querySelectorAll('.bubble-level.detail').forEach(el => el.classList.remove('active'));
+  },
+  setBubbleDetail(title, text){
+    const active = document.querySelector('.bubble-level.detail.active .bubble-detail');
+    if(active){
+      active.innerHTML = `<h3>${title}</h3><p>${text}</p>`;
+    }
+  },
+  footerNote(label){
+    alert(label + ' page placeholder: this can become a dedicated page or modal in the next version.');
+  }
+};
+</script>
+</body>
+</html>
