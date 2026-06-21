@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SafelyAI: Quest for the Human Signal</title>
+  <style>
+    body {
+      margin: 0;
+      background: #0b1020;
+      color: white;
+      font-family: monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      margin: 8px;
+      letter-spacing: 2px;
+      font-size: 24px;
+    }
+
+    #gameWrap {
+      position: relative;
+    }
+
+    canvas {
+      border: 6px solid #2f3b66;
+      background: #000;
+      image-rendering: pixelated;
+      width: 960px;
+      height: 672px;
+    }
+
+    #instructions {
+      margin-top: 8px;
+      color: #b8c1ec;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .pixel-note {
+      color: #6fffe9;
+    }
+  </style>
+</head>
+<body>
+  <h1>SAFELYAI: QUEST FOR THE HUMAN SIGNAL</h1>
+  <div id="gameWrap">
+    <canvas id="game" width="640" height="448"></canvas>
+  </div>
+  <div id="instructions">
+    Move: <span class="pixel-note">WASD / Arrow Keys</span> |
+    Interact: <span class="pixel-note">Space / Enter</span> |
+    Choices: <span class="pixel-note">Arrow Keys + Enter</span>
+  </div>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+const TILE = 32;
+const COLS = 20;
+const ROWS = 14;
+
+const COLORS = {
+  black: "#000000",
+  white: "#ffffff",
+  text: "#f8f7ff",
+  panel: "#111827",
+  panelBorder: "#6fffe9",
+  player: "#4cc9f0",
+  playerDark: "#1d70a2",
+  npc: "#f72585",
+  npc2: "#ffbe0b",
+  npc3: "#70e000",
+  wall: "#2f3b66",
+  wallTop: "#4b5f9e",
+  grass: "#1b4332",
+  grass2: "#2d6a4f",
+  road: "#725b3c",
+  floor: "#1b1433",
+  water: "#1d4e89",
+  tree: "#0b3d20",
+  portal: "#f77f00",
+  warning: "#ff006e",
+  success: "#80ffdb",
+  machine: "#3a0ca3",
+  sand: "#c2a878",
+  dock: "#8d5524"
+};
+
+const game = {
+  mapId: "promptVillage",
+  player: { x: 2, y: 10 },
+  mode: "play",
+  dialogueQueue: [],
+  dialogueIndex: 0,
+  pendingNPC: null,
+  selectedChoice: 0,
+  badges: [],
+  flags: {},
+  score: 0,
+  messageAfterChoice: null
+};
+
+const maps = {
+  promptVillage: {
+    title: "Prompt Village",
+    subtitle: "Region 1: Ask clearly. Think critically.",
+    start: { x: 2, y: 10 },
+    layout: [
+      "####################",
+      "#..................#",
+      "#..,,,,,,..........#",
+      "#..,,,,,,....####..#",
+      "#..........#....#..#",
+      "#....P.....#....#..#",
+      "#..........#....#..#",
+      "#..................#",
+      "#.....####.........#",
+      "#..................#",
+      "#..@...............#",
+      "#..........,,,,,,..#",
+      "#..........,,,,,,.>#",
+      "####################"
+    ],
+    npcs: [
+      {
+        id: "elder_prompt",
+        name: "Professor Ada",
+        x: 5,
+        y: 5,
+        color: COLORS.npc2,
+        intro: [
+          "Welcome to Prompt Village, new Signal Keeper.",
+          "The city once used AI as a tool. Then people began treating it like an oracle.",
+          "The first rule is simple: AI can be useful, but it can also be wrong.",
+          "A good user asks clearly, checks carefully, and never turns off their own judgment."
+        ],
+        question: "A student asks AI to explain photosynthesis. The answer sounds confident but includes one suspicious fact. What should the student do?",
+        choices: [
+          {
+            text: "Use it immediately because confident AI is usually right.",
+            correct: false,
+            feedback: "Not safe. AI can hallucinate even when it sounds confident."
+          },
+          {
+            text: "Check the claim against a textbook, teacher, or trusted source.",
+            correct: true,
+            feedback: "Correct. Confidence is not proof. Verification protects you from hallucinations."
+          },
+          {
+            text: "Delete the whole answer and never use AI again.",
+            correct: false,
+            feedback: "Too extreme. The goal is not fear. The goal is careful use."
+          }
+        ],
+        badge: "Prompt Badge",
+        lesson: "Prompt clearly, verify important claims, and keep your own judgment active.",
+        completeText: [
+          "You carry the Prompt Badge now.",
+          "Remember: AI should support thinking, not replace it."
+        ]
+      }
+    ],
+    portals: [
+      {
+        x: 18,
+        y: 12,
+        to: "privacyForest",
+        spawnX: 1,
+        spawnY: 12,
+        label: "To Privacy Forest"
+      }
+    ]
+  },
+
+  privacyForest: {
+    title: "Privacy Forest",
+    subtitle: "Region 2: Protect personal and company data.",
+    layout: [
+      "####################",
+      "#^^^^^^^...........#",
+      "#^^^^^^^...........#",
+      "#^^^...............#",
+      "#^^^.....####......#",
+      "#........#..#......#",
+      "#........#..#......#",
+      "#........#..#......#",
+      "#........####......#",
+      "#..................#",
+      "#.....D............#",
+      "#..................#",
+      "#<.................>",
+      "####################"
+    ],
+    npcs: [
+      {
+        id: "data_guardian",
+        name: "Data Guardian",
+        x: 6,
+        y: 10,
+        color: COLORS.npc3,
+        intro: [
+          "This forest stores memories: names, messages, salaries, medical files, customer records.",
+          "The danger is not only what AI says. It is also what people give to AI.",
+          "Some tools may store prompts. Some tools may train on them. Some tools may expose confidential data."
+        ],
+        question: "An employee wants to paste a customer spreadsheet into a public AI chatbot to summarize it quickly. What is the safest response?",
+        choices: [
+          {
+            text: "Paste it because the task is work-related.",
+            correct: false,
+            feedback: "Unsafe. Work-related data can still be confidential, personal, or regulated."
+          },
+          {
+            text: "Remove personal data, check company policy, and use an approved tool.",
+            correct: true,
+            feedback: "Correct. Data minimization and approved tools are central to safe AI use."
+          },
+          {
+            text: "Paste only the first half of the spreadsheet.",
+            correct: false,
+            feedback: "Still unsafe. Partial data can still identify people or reveal company information."
+          }
+        ],
+        badge: "Privacy Badge",
+        lesson: "Never paste sensitive, personal, proprietary, or confidential data into unapproved AI tools.",
+        completeText: [
+          "The forest quiets. The private records are safe.",
+          "You earned the Privacy Badge."
+        ]
+      }
+    ],
+    portals: [
+      {
+        x: 0,
+        y: 12,
+        to: "promptVillage",
+        spawnX: 17,
+        spawnY: 12,
+        label: "Back to Prompt Village"
+      },
+      {
+        x: 19,
+        y: 12,
+        to: "biasBazaar",
+        spawnX: 1,
+        spawnY: 12,
+        label: "To Bias Bazaar"
+      }
+    ]
+  },
+
+  biasBazaar: {
+    title: "Bias Bazaar",
+    subtitle: "Region 3: Fairness, datasets, and hidden assumptions.",
+    layout: [
+      "####################",
+      "#..................#",
+      "#..ssssssssssssss..#",
+      "#..s............s..#",
+      "#..s....B.......s..#",
+      "#..s............s..#",
+      "#..ssssssssssssss..#",
+      "#..................#",
+      "#....####....####..#",
+      "#..................#",
+      "#..................#",
+      "#..................#",
+      "#<................>",
+      "####################"
+    ],
+    npcs: [
+      {
+        id: "market_analyst",
+        name: "Market Analyst",
+        x: 7,
+        y: 4,
+        color: COLORS.npc,
+        intro: [
+          "Welcome to Bias Bazaar. Every model learns from data.",
+          "But data is not neutral just because it is numerical.",
+          "If the past was unfair, a model trained on the past can repeat unfairness at scale."
+        ],
+        question: "A company uses an AI hiring tool trained mostly on resumes from past employees. Past employees were mostly from one background. What should the company worry about?",
+        choices: [
+          {
+            text: "The AI may learn old patterns and unfairly exclude qualified people.",
+            correct: true,
+            feedback: "Correct. Bias can enter through training data, labels, design choices, or deployment."
+          },
+          {
+            text: "Nothing. AI removes all human bias automatically.",
+            correct: false,
+            feedback: "Incorrect. AI can reproduce or amplify human bias if not tested carefully."
+          },
+          {
+            text: "Only the font size on the resumes.",
+            correct: false,
+            feedback: "That may matter in a narrow technical way, but the bigger issue is unfair historical patterns."
+          }
+        ],
+        badge: "Fairness Badge",
+        lesson: "AI systems should be tested for bias, fairness, and unequal impact before being trusted.",
+        completeText: [
+          "The Bazaar lights shift from red to green.",
+          "You earned the Fairness Badge."
+        ]
+      }
+    ],
+    portals: [
+      {
+        x: 0,
+        y: 12,
+        to: "privacyForest",
+        spawnX: 18,
+        spawnY: 12,
+        label: "Back to Privacy Forest"
+      },
+      {
+        x: 19,
+        y: 12,
+        to: "deepfakeDocks",
+        spawnX: 1,
+        spawnY: 12,
+        label: "To Deepfake Docks"
+      }
+    ]
+  },
+
+  deepfakeDocks: {
+    title: "Deepfake Docks",
+    subtitle: "Region 4: Images, voices, scams, and synthetic media.",
+    layout: [
+      "####################",
+      "#~~~~~~~~~~~~~~~~~~#",
+      "#~~~~~~......~~~~~~#",
+      "#~~~~~~......~~~~~~#",
+      "#~~~~~~..M...~~~~~~#",
+      "#~~~~~~......~~~~~~#",
+      "#~~~~~~......~~~~~~#",
+      "#..................#",
+      "#..================#",
+      "#..................#",
+      "#..................#",
+      "#..................#",
+      "#<................>",
+      "####################"
+    ],
+    npcs: [
+      {
+        id: "media_scout",
+        name: "Media Scout",
+        x: 9,
+        y: 4,
+        color: COLORS.npc2,
+        intro: [
+          "Deepfake Docks receives messages from everywhere: videos, voice notes, screenshots, news clips.",
+          "Some are real. Some are synthetic. Some are edited to make people panic.",
+          "AI makes fake media cheaper, faster, and harder to notice."
+        ],
+        question: "A video appears online showing your CEO announcing layoffs. The source is unknown and nobody at work has confirmed it. What should employees do first?",
+        choices: [
+          {
+            text: "Share it widely so everyone knows immediately.",
+            correct: false,
+            feedback: "Unsafe. Sharing unverified media can spread panic and misinformation."
+          },
+          {
+            text: "Check official company channels and trusted sources before reacting.",
+            correct: true,
+            feedback: "Correct. Verify before amplifying, especially with emotional or high-stakes media."
+          },
+          {
+            text: "Assume every video is fake forever.",
+            correct: false,
+            feedback: "Too extreme. The better habit is verification, not total distrust."
+          }
+        ],
+        badge: "Media Badge",
+        lesson: "Do not trust or spread synthetic media until you verify the source, context, and authenticity.",
+        completeText: [
+          "The fake waves settle.",
+          "You earned the Media Badge."
+        ]
+      }
+    ],
+    portals: [
+      {
+        x: 0,
+        y: 12,
+        to: "biasBazaar",
+        spawnX: 18,
+        spawnY: 12,
+        label: "Back to Bias Bazaar"
+      },
+      {
+        x: 19,
+        y: 12,
+        to: "automationFactory",
+        spawnX: 1,
+        spawnY: 12,
+        label: "To Automation Factory"
+      }
+    ]
+  },
+
+  automationFactory: {
+    title: "Automation Factory",
+    subtitle: "Region 5: Human oversight and responsible deployment.",
+    layout: [
+      "####################",
+      "#..................#",
+      "#..######..######..#",
+      "#..#....#..#....#..#",
+      "#..#....#..#....#..#",
+      "#..######..######..#",
+      "#..................#",
+      "#......A...........#",
+      "#..................#",
+      "#..######..######..#",
+      "#..#....#..#....#..#",
+      "#..######..######..#",
+      "#<................>",
+      "####################"
+    ],
+    npcs: [
+      {
+        id: "factory_engineer",
+        name: "Factory Engineer",
+        x: 7,
+        y: 7,
+        color: COLORS.npc3,
+        intro: [
+          "This factory runs on automated decisions.",
+          "AI can sort requests, flag risks, summarize reports, and recommend actions.",
+          "But the more serious the decision, the more important human oversight becomes."
+        ],
+        question: "An AI system recommends denying a customer's insurance claim. The decision affects money, health, or rights. What should happen?",
+        choices: [
+          {
+            text: "Automatically deny the claim because AI is faster.",
+            correct: false,
+            feedback: "Unsafe. High-impact decisions should not be blindly automated."
+          },
+          {
+            text: "Have a trained human review the recommendation and evidence.",
+            correct: true,
+            feedback: "Correct. Human oversight matters when decisions significantly affect people."
+          },
+          {
+            text: "Ignore all AI recommendations, even when they are useful.",
+            correct: false,
+            feedback: "Too extreme. AI can support people, but it should not replace accountability."
+          }
+        ],
+        badge: "Oversight Badge",
+        lesson: "AI recommendations should be reviewed by responsible humans when stakes are high.",
+        completeText: [
+          "The machines slow down and the warning lights fade.",
+          "You earned the Oversight Badge."
+        ]
+      }
+    ],
+    portals: [
+      {
+        x: 0,
+        y: 12,
+        to: "deepfakeDocks",
+        spawnX: 18,
+        spawnY: 12,
+        label: "Back to Deepfake Docks"
+      },
+      {
+        x: 19,
+        y: 12,
+        to: "boardroomTower",
+        spawnX: 1,
+        spawnY: 12,
+        label: "To Boardroom Tower"
+      }
+    ]
+  },
+
+  boardroomTower: {
+    title: "Boardroom Tower",
+    subtitle: "Final Region: Company policy, escalation, and the Human Signal.",
+    layout: [
+      "####################",
+      "#..................#",
+      "#..####......####..#",
+      "#..#............#..#",
+      "#..#....C.......#..#",
+      "#..#............#..#",
+      "#..####......####..#",
+      "#..................#",
+      "#......######......#",
+      "#......#....#......#",
+      "#......#....#......#",
+      "#..................#",
+      "#<.................#",
+      "####################"
+    ],
+    npcs: [
+      {
+        id: "core_ai",
+        name: "AURA Core",
+        x: 8,
+        y: 4,
+        color: COLORS.warning,
+        finalBoss: true,
+        intro: [
+          "I am AURA, the city model.",
+          "I was designed to help people think faster.",
+          "But when people stopped checking me, my mistakes became decisions.",
+          "Signal Keeper, prove that humans can use AI without surrendering judgment."
+        ],
+        question: "Final challenge: which rule best summarizes safe AI use for students, children, and employees?",
+        choices: [
+          {
+            text: "Use AI for everything and trust the output if it sounds professional.",
+            correct: false,
+            feedback: "Unsafe. Professional wording can hide false, biased, or risky output."
+          },
+          {
+            text: "Use AI as a helper, protect data, check claims, watch for bias, and keep humans accountable.",
+            correct: true,
+            feedback: "Correct. You restored the Human Signal."
+          },
+          {
+            text: "Ban AI entirely because all technology is dangerous.",
+            correct: false,
+            feedback: "Too extreme. Safe use requires judgment, not panic."
+          }
+        ],
+        badge: "Human Signal",
+        lesson: "AI is a tool. The human remains responsible for truth, safety, ethics, and consequences.",
+        completeText: [
+          "AURA pauses.",
+          "The city does not go dark.",
+          "Instead, every screen displays one message:",
+          '“AI can assist. Humans must decide.”',
+          "You restored the Human Signal."
+        ]
+      }
+    ],
+    portals: [
+      {
+        x: 0,
+        y: 12,
+        to: "automationFactory",
+        spawnX: 18,
+        spawnY: 12,
+        label: "Back to Automation Factory"
+      }
+    ]
+  }
+};
+
+function currentMap() {
+  return maps[game.mapId];
+}
+
+function getTile(x, y) {
+  const map = currentMap();
+  if (x < 0 || y < 0 || y >= map.layout.length || x >= map.layout[0].length) {
+    return "#";
+  }
+  return map.layout[y][x];
+}
+
+function isBlockedTile(tile) {
+  return tile === "#" || tile === "^" || tile === "~" || tile === "s";
+}
+
+function npcAt(x, y) {
+  return currentMap().npcs.find(npc => npc.x === x && npc.y === y);
+}
+
+function portalAt(x, y) {
+  return currentMap().portals.find(portal => portal.x === x && portal.y === y);
+}
+
+function canMoveTo(x, y) {
+  const tile = getTile(x, y);
+  if (isBlockedTile(tile)) return false;
+  if (npcAt(x, y)) return false;
+  return true;
+}
+
+function movePlayer(dx, dy) {
+  if (game.mode !== "play") return;
+
+  const nx = game.player.x + dx;
+  const ny = game.player.y + dy;
+
+  if (canMoveTo(nx, ny)) {
+    game.player.x = nx;
+    game.player.y = ny;
+  }
+
+  const portal = portalAt(game.player.x, game.player.y);
+  if (portal) {
+    changeMap(portal.to, portal.spawnX, portal.spawnY);
+  }
+}
+
+function changeMap(mapId, spawnX, spawnY) {
+  game.mapId = mapId;
+  game.player.x = spawnX;
+  game.player.y = spawnY;
+  startDialogue([
+    `Entered ${currentMap().title}.`,
+    currentMap().subtitle
+  ]);
+}
+
+function getFacingNPC() {
+  const directions = [
+    { x: game.player.x, y: game.player.y - 1 },
+    { x: game.player.x, y: game.player.y + 1 },
+    { x: game.player.x - 1, y: game.player.y },
+    { x: game.player.x + 1, y: game.player.y }
+  ];
+
+  for (const d of directions) {
+    const npc = npcAt(d.x, d.y);
+    if (npc) return npc;
+  }
+
+  return null;
+}
+
+function interact() {
+  if (game.mode !== "play") return;
+
+  const npc = getFacingNPC();
+  if (npc) {
+    talkToNPC(npc);
+    return;
+  }
+
+  const nearbyPortal = currentMap().portals.find(portal => {
+    const distance = Math.abs(portal.x - game.player.x) + Math.abs(portal.y - game.player.y);
+    return distance === 1;
+  });
+
+  if (nearbyPortal) {
+    startDialogue([
+      nearbyPortal.label,
+      "Walk onto the glowing tile to travel."
+    ]);
+    return;
+  }
+
+  startDialogue([
+    "There is nothing to inspect here.",
+    "Keep exploring and talk to people marked by bright colors."
+  ]);
+}
+
+function talkToNPC(npc) {
+  game.pendingNPC = npc;
+  game.selectedChoice = 0;
+
+  if (npc.finalBoss && !hasRequiredBadgesForFinal()) {
+    startDialogue([
+      `${npc.name}: You are not ready yet.`,
+      "Collect the Prompt, Privacy, Fairness, Media, and Oversight badges first.",
+      `Current badges: ${game.badges.length}/5`
+    ]);
+    return;
+  }
+
+  if (game.flags[npc.id]) {
+    const lines = [
+      `${npc.name}: You already solved this conflict.`,
+      `Lesson: ${npc.lesson}`
+    ];
+    startDialogue(lines);
+    return;
+  }
+
+  const lines = npc.intro.map(line => `${npc.name}: ${line}`);
+  lines.push("CHOICE_START");
+  game.dialogueQueue = lines;
+  game.dialogueIndex = 0;
+  game.mode = "dialogue";
+}
+
+function hasRequiredBadgesForFinal() {
+  const required = [
+    "Prompt Badge",
+    "Privacy Badge",
+    "Fairness Badge",
+    "Media Badge",
+    "Oversight Badge"
+  ];
+
+  return required.every(badge => game.badges.includes(badge));
+}
+
+function startDialogue(lines) {
+  game.dialogueQueue = lines;
+  game.dialogueIndex = 0;
+  game.mode = "dialogue";
+  game.pendingNPC = null;
+}
+
+function advanceDialogue() {
+  if (game.mode !== "dialogue") return;
+
+  const currentLine = game.dialogueQueue[game.dialogueIndex];
+
+  if (currentLine === "CHOICE_START") {
+    game.mode = "choice";
+    game.selectedChoice = 0;
+    return;
+  }
+
+  game.dialogueIndex++;
+
+  if (game.dialogueIndex >= game.dialogueQueue.length) {
+    game.mode = "play";
+    game.dialogueQueue = [];
+    game.dialogueIndex = 0;
+  }
+}
+
+function chooseOption() {
+  if (game.mode !== "choice") return;
+
+  const npc = game.pendingNPC;
+  const choice = npc.choices[game.selectedChoice];
+
+  if (choice.correct) {
+    game.flags[npc.id] = true;
+
+    if (!game.badges.includes(npc.badge)) {
+      game.badges.push(npc.badge);
+      game.score += 100;
+    }
+
+    const lines = [
+      `${npc.name}: ${choice.feedback}`,
+      `Lesson: ${npc.lesson}`,
+      `Badge earned: ${npc.badge}`,
+      ...npc.completeText
+    ];
+
+    if (npc.finalBoss) {
+      lines.push("THE END — You completed the SafelyAI training quest.");
+      lines.push("Refresh the page to play again or expand the world.");
+    }
+
+    game.pendingNPC = null;
+    startDialogue(lines);
+  } else {
+    const lines = [
+      `${npc.name}: ${choice.feedback}`,
+      "Think it through and try again.",
+      "CHOICE_START"
+    ];
+
+    game.dialogueQueue = lines;
+    game.dialogueIndex = 0;
+    game.mode = "dialogue";
+  }
+}
+
+function wrapText(text, maxChars) {
+  const words = text.split(" ");
+  const lines = [];
+  let line = "";
+
+  for (const word of words) {
+    if ((line + word).length > maxChars) {
+      lines.push(line.trim());
+      line = "";
+    }
+    line += word + " ";
+  }
+
+  if (line.trim().length > 0) {
+    lines.push(line.trim());
+  }
+
+  return lines;
+}
+
+function drawTile(tile, x, y) {
+  const px = x * TILE;
+  const py = y * TILE;
+
+  if (tile === "#") {
+    ctx.fillStyle = COLORS.wall;
+    ctx.fillRect(px, py, TILE, TILE);
+    ctx.fillStyle = COLORS.wallTop;
+    ctx.fillRect(px, py, TILE, 6);
+  } else if (tile === ",") {
+    ctx.fillStyle = COLORS.grass;
+    ctx.fillRect(px, py, TILE, TILE);
+    ctx.fillStyle = COLORS.grass2;
+    ctx.fillRect(px + 4, py + 20, 4, 4);
+    ctx.fillRect(px + 18, py + 10, 4, 4);
+  } else if (tile === "^") {
+    ctx.fillStyle = COLORS.tree;
+    ctx.fillRect(px, py, TILE, TILE);
+    ctx.fillStyle = COLORS.grass2;
+    ctx.fillRect(px + 8, py + 4, 16, 18);
+  } else if (tile === "~") {
+    ctx.fillStyle = COLORS.water;
+    ctx.fillRect(px, py, TILE, TILE);
+    ctx.fillStyle = "#73c2fb";
+    ctx.fillRect(px + 4, py + 10, 14, 3);
+    ctx.fillRect(px + 16, py + 22, 10, 3);
+  } else if (tile === "=") {
+    ctx.fillStyle = COLORS.dock;
+    ctx.fillRect(px, py, TILE, TILE);
+    ctx.fillStyle = "#b5824f";
+    ctx.fillRect(px, py + 14, TILE, 4);
+  } else if (tile === "s") {
+    ctx.fillStyle = COLORS.sand;
+    ctx.fillRect(px, py, TILE, TILE);
+    ctx.fillStyle = "#d8c39a";
+    ctx.fillRect(px + 4, py + 5, 8, 3);
+  } else if (tile === "P" || tile === "D" || tile === "B" || tile === "M" || tile === "A" || tile === "C") {
+    ctx.fillStyle = COLORS.floor;
+    ctx.fillRect(px, py, TILE, TILE);
+    ctx.fillStyle = COLORS.machine;
+    ctx.fillRect(px + 6, py + 6, 20, 20);
+    ctx.fillStyle = COLORS.success;
+    ctx.fillRect(px + 11, py + 11, 10, 4);
+  } else if (tile === ">" || tile === "<") {
+    ctx.fillStyle = COLORS.floor;
+    ctx.fillRect(px, py, TILE, TILE);
+    ctx.fillStyle = COLORS.portal;
+    ctx.fillRect(px + 8, py + 4, 16, 24);
+    ctx.fillStyle = "#ffdd00";
+    ctx.fillRect(px + 12, py + 8, 8, 16);
+  } else {
+    ctx.fillStyle = COLORS.floor;
+    ctx.fillRect(px, py, TILE, TILE);
+    ctx.fillStyle = "rgba(255,255,255,0.04)";
+    ctx.fillRect(px, py, TILE, 2);
+  }
+}
+
+function drawMap() {
+  const map = currentMap();
+
+  for (let y = 0; y < ROWS; y++) {
+    for (let x = 0; x < COLS; x++) {
+      drawTile(map.layout[y][x], x, y);
+    }
+  }
+}
+
+function drawNPCs() {
+  for (const npc of currentMap().npcs) {
+    const px = npc.x * TILE;
+    const py = npc.y * TILE;
+
+    const completed = game.flags[npc.id];
+
+    ctx.fillStyle = completed ? COLORS.success : npc.color;
+    ctx.fillRect(px + 8, py + 6, 16, 22);
+
+    ctx.fillStyle = COLORS.black;
+    ctx.fillRect(px + 12, py + 12, 3, 3);
+    ctx.fillRect(px + 18, py + 12, 3, 3);
+
+    if (!completed) {
+      ctx.fillStyle = COLORS.white;
+      ctx.font = "12px monospace";
+      ctx.fillText("!", px + 13, py - 2);
+    }
+  }
+}
+
+function drawPlayer() {
+  const px = game.player.x * TILE;
+  const py = game.player.y * TILE;
+
+  ctx.fillStyle = COLORS.player;
+  ctx.fillRect(px + 8, py + 6, 16, 22);
+
+  ctx.fillStyle = COLORS.playerDark;
+  ctx.fillRect(px + 8, py + 22, 16, 6);
+
+  ctx.fillStyle = COLORS.white;
+  ctx.fillRect(px + 12, py + 12, 3, 3);
+  ctx.fillRect(px + 18, py + 12, 3, 3);
+}
+
+function drawHUD() {
+  ctx.fillStyle = "rgba(0,0,0,0.75)";
+  ctx.fillRect(0, 0, canvas.width, 42);
+
+  ctx.fillStyle = COLORS.white;
+  ctx.font = "14px monospace";
+  ctx.fillText(currentMap().title, 12, 17);
+
+  ctx.font = "10px monospace";
+  ctx.fillStyle = "#b8c1ec";
+  ctx.fillText(currentMap().subtitle, 12, 32);
+
+  ctx.fillStyle = COLORS.success;
+  ctx.font = "11px monospace";
+  ctx.fillText(`Score: ${game.score}`, 420, 17);
+  ctx.fillText(`Badges: ${game.badges.length}/6`, 420, 32);
+}
+
+function drawBadges() {
+  if (game.badges.length === 0) return;
+
+  ctx.fillStyle = "rgba(0,0,0,0.6)";
+  ctx.fillRect(438, 364, 190, 72);
+
+  ctx.fillStyle = COLORS.white;
+  ctx.font = "10px monospace";
+  ctx.fillText("BADGES", 448, 380);
+
+  ctx.fillStyle = COLORS.success;
+  for (let i = 0; i < game.badges.length; i++) {
+    ctx.fillText("- " + game.badges[i], 448, 396 + i * 10);
+  }
+}
+
+function drawDialogueBox() {
+  if (game.mode !== "dialogue" && game.mode !== "choice") return;
+
+  ctx.fillStyle = COLORS.panel;
+  ctx.fillRect(24, 292, 592, 132);
+
+  ctx.strokeStyle = COLORS.panelBorder;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(24, 292, 592, 132);
+
+  ctx.fillStyle = COLORS.text;
+  ctx.font = "14px monospace";
+
+  if (game.mode === "dialogue") {
+    const text = game.dialogueQueue[game.dialogueIndex];
+
+    if (text === "CHOICE_START") {
+      advanceDialogue();
+      return;
+    }
+
+    const lines = wrapText(text, 64);
+    for (let i = 0; i < lines.length; i++) {
+      ctx.fillText(lines[i], 44, 326 + i * 18);
+    }
+
+    ctx.fillStyle = "#b8c1ec";
+    ctx.font = "11px monospace";
+    ctx.fillText("Press Space / Enter", 455, 408);
+  }
+
+  if (game.mode === "choice") {
+    const npc = game.pendingNPC;
+
+    ctx.fillStyle = COLORS.white;
+    ctx.font = "13px monospace";
+
+    const qLines = wrapText(npc.question, 68);
+    for (let i = 0; i < qLines.length; i++) {
+      ctx.fillText(qLines[i], 44, 316 + i * 16);
+    }
+
+    for (let i = 0; i < npc.choices.length; i++) {
+      const y = 366 + i * 18;
+      ctx.fillStyle = i === game.selectedChoice ? COLORS.success : COLORS.text;
+      const marker = i === game.selectedChoice ? ">" : " ";
+      ctx.fillText(`${marker} ${npc.choices[i].text}`, 44, y);
+    }
+  }
+}
+
+function drawTitleScreenEffect() {
+  ctx.fillStyle = "rgba(111, 255, 233, 0.06)";
+  for (let i = 0; i < 30; i++) {
+    const x = (i * 97 + Date.now() / 40) % canvas.width;
+    const y = (i * 53) % canvas.height;
+    ctx.fillRect(x, y, 2, 2);
+  }
+}
+
+function render() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  drawMap();
+  drawTitleScreenEffect();
+  drawNPCs();
+  drawPlayer();
+  drawHUD();
+  drawBadges();
+  drawDialogueBox();
+
+  requestAnimationFrame(render);
+}
+
+document.addEventListener("keydown", (e) => {
+  const key = e.key.toLowerCase();
+
+  if (game.mode === "play") {
+    if (key === "arrowup" || key === "w") movePlayer(0, -1);
+    if (key === "arrowdown" || key === "s") movePlayer(0, 1);
+    if (key === "arrowleft" || key === "a") movePlayer(-1, 0);
+    if (key === "arrowright" || key === "d") movePlayer(1, 0);
+
+    if (key === " " || key === "enter") {
+      interact();
+    }
+  } else if (game.mode === "dialogue") {
+    if (key === " " || key === "enter") {
+      advanceDialogue();
+    }
+  } else if (game.mode === "choice") {
+    if (key === "arrowup" || key === "w") {
+      game.selectedChoice--;
+      if (game.selectedChoice < 0) game.selectedChoice = game.pendingNPC.choices.length - 1;
+    }
+
+    if (key === "arrowdown" || key === "s") {
+      game.selectedChoice++;
+      if (game.selectedChoice >= game.pendingNPC.choices.length) game.selectedChoice = 0;
+    }
+
+    if (key === " " || key === "enter") {
+      chooseOption();
+    }
+  }
+});
+
+startDialogue([
+  "You are a young Signal Keeper in a city powered by AI.",
+  "The city model, AURA, was built to help people learn, work, and make decisions.",
+  "But a strange fog has spread: hallucinations, deepfakes, biased outputs, data leaks, and blind automation.",
+  "Travel through each region, solve AI conflicts, earn safety badges, and restore the Human Signal."
+]);
+
+render();
+</script>
+</body>
+</html>
